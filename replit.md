@@ -38,7 +38,13 @@ Offline-oriented, tablet-first PWA for recording fictional crew observations, co
 
 ## Product
 
-The first prototype milestone includes a fictional chest-pain scenario, crew observation/review, manual measurement entry, mission profiles, fictional routines/equipment, a non-causal habitat timeline, and offline handoff exports. Source-reviewed procedures, real data integrations, AI, live devices, and production-grade access control are not implemented.
+The prototype includes general emergency-help recording, crew observation/review, manual measurement entry, mission profiles, fictional routines/equipment, a non-causal habitat timeline, and offline handoff exports. Earlier chest-pain demo records are preserved as historical records. Source-reviewed procedures, real data integrations, AI, live devices, and production-grade access control are not implemented.
+
+## Usability requirements
+
+- The users are not doctors. Use plain observations, not diagnoses or clinical interpretation.
+- Keep tablet screens simple: essentials and one next action first; expose setup, research, history, and forms only when requested.
+- Emergency is general help for any urgent concern, not a chest-pain-only scenario. Do not require symptom classification, measurements, or completing a form before showing how to get onboard help.
 
 ## User preferences
 

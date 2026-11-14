@@ -4,7 +4,6 @@ import { Link } from "wouter";
 import { crew } from "@/lib/crew-data";
 import { useRecords } from "@/lib/records-context";
 import type { Assessment } from "@/lib/local-store";
-import { hasChestPainReported } from "@/lib/observation-logic";
 
 const prompts = [
   ["reported", "What the person reports"], ["onset", "Symptom onset"], ["appearance", "What you observe"],
@@ -19,7 +18,6 @@ export default function AssessmentPage() {
   const [observations, setObservations] = useState<Record<string,string>>({});
   const [notes, setNotes] = useState("");
   const [message, setMessage] = useState("");
-  const hasChestPain = hasChestPainReported(observations.reported);
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     const entry: Assessment = { id: crypto.randomUUID(), person: crew.find((c) => c.id === person)?.name || person, observer: observer === "self" ? "Self" : "Crewmate", at: new Date().toISOString(), observations, notes };
@@ -39,8 +37,8 @@ export default function AssessmentPage() {
       </div>
       <div className="mt-6 rounded-xl border bg-[hsl(var(--background))] p-4">
         <p className="text-sm font-bold">Quick symptom labels · not diagnoses</p>
-        <div className="mt-3 flex flex-wrap gap-2">{symptomOptions.map((symptom) => <button key={symptom} type="button" className={symptom === "Chest pain" ? "btn btn-danger min-h-11 px-3" : "btn btn-soft min-h-11 px-3"} onClick={() => setObservations({ ...observations, reported: symptom })} data-testid={`button-symptom-${symptom.toLowerCase().replaceAll(" ", "-")}`}>{symptom === "Chest pain" && <Siren size={16}/>} {symptom}</button>)}</div>
-        {hasChestPain && <Link href="/emergency" className="btn btn-danger mt-4 min-h-12 w-full justify-between no-underline" data-testid="link-chest-pain-emergency"><span className="flex items-center gap-2"><Siren size={18}/> Open emergency assistance now</span><ArrowRight size={17}/></Link>}
+        <div className="mt-3 flex flex-wrap gap-2">{symptomOptions.map((symptom) => <button key={symptom} type="button" className="btn btn-soft min-h-11 px-3" onClick={() => setObservations({ ...observations, reported: symptom })} data-testid={`button-symptom-${symptom.toLowerCase().replaceAll(" ", "-")}`}>{symptom}</button>)}</div>
+        <Link href="/emergency" className="btn btn-danger mt-4 min-h-12 w-full justify-between no-underline" data-testid="link-observation-emergency"><span className="flex items-center gap-2"><Siren size={18}/> Need urgent help? Get help now</span><ArrowRight size={17}/></Link>
         <p className="mt-3 text-xs leading-5 text-muted-foreground">Do not wait for a completed form or measurement before opening the emergency pathway. Unknown details can remain blank.</p>
       </div>
       <div className="mt-6 grid gap-4 sm:grid-cols-2">

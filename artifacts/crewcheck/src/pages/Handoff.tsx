@@ -18,7 +18,8 @@ export default function HandoffPage() {
       "CREWCHECK · LOCAL HANDOFF (training prototype)",
       "Not validated medical equipment or flight-qualified software. Not NASA-endorsed.",
       "",
-      `Person: ${incident.patientName} (fictional sample profile)`,
+      `Person: ${incident.patientName}${incident.patientId === "unknown" ? " (identity not entered)" : " (fictional sample profile)"}`,
+      `Concern selected by helper: ${incident.concern || "Not entered; see original event history"}`,
       `Incident started: ${new Date(incident.startedAt).toLocaleString()}`,
       `Status: ${incident.status}`,
       `Procedure content version: ${incident.procedureVersion || EMERGENCY_PROCEDURE_VERSION}`,
@@ -53,6 +54,8 @@ export default function HandoffPage() {
     disclaimer: "Training prototype only; not validated medical equipment or flight-qualified software; not NASA-endorsed.",
     incident: {
       id: incident.id, person: incident.patientName, fictional: true, startedAt: incident.startedAt, status: incident.status,
+      concern: incident.concern || null,
+      flow: incident.flow || "legacy-training-record",
       procedureVersion: incident.procedureVersion || EMERGENCY_PROCEDURE_VERSION,
       procedureReviewStatus: EMERGENCY_CONTENT_REVIEW,
       sourceReferences: [],

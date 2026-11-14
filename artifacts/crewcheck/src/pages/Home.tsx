@@ -24,13 +24,13 @@ export default function Home() {
       </article>)}
     </section>
     {active && <Link href="/emergency" className="mt-7 flex min-h-[82px] items-center justify-between rounded-2xl border border-[hsl(var(--destructive)/.35)] bg-[hsl(var(--destructive)/.07)] px-5 py-4 text-inherit no-underline" data-testid="active-incident-resume">
-      <span><span className="eyebrow text-[hsl(var(--destructive))]">Active incident · resume</span><strong className="mt-1 block">{active.patientName} · chest discomfort scenario</strong></span><ArrowRight/>
+      <span><span className="eyebrow text-[hsl(var(--destructive))]">Help record · resume</span><strong className="mt-1 block">{active.patientName} · {active.concern || "Earlier training record"}</strong></span><ArrowRight/>
     </Link>}
     <section className="mt-8 grid gap-5 lg:grid-cols-[1.2fr_.8fr]">
       <div className="card overflow-hidden">
         <div className="border-b border-[hsl(var(--border))] p-5 sm:p-6"><p className="eyebrow">Start with what matters</p><h2 className="mt-2 text-2xl font-extrabold tracking-[-.04em]">How can we support the crew?</h2></div>
         <div className="grid gap-px bg-[hsl(var(--border))] sm:grid-cols-2">
-          <Link href="/emergency" className="group flex min-h-[150px] flex-col justify-between bg-[hsl(var(--card))] p-5 text-inherit no-underline hover:bg-[hsl(var(--accent)/.06)]" data-testid="launch-emergency"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[hsl(var(--destructive)/.1)] text-[hsl(var(--destructive))]"><Siren/></span><span><strong className="flex items-center justify-between">Emergency response <ArrowRight size={17}/></strong><small className="mt-1 block text-muted-foreground">Chest-pain training scenario</small></span></Link>
+          <Link href="/emergency" className="group flex min-h-[150px] flex-col justify-between bg-[hsl(var(--card))] p-5 text-inherit no-underline hover:bg-[hsl(var(--accent)/.06)]" data-testid="launch-emergency"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[hsl(var(--destructive)/.1)] text-[hsl(var(--destructive))]"><Siren/></span><span><strong className="flex items-center justify-between">Get help now <ArrowRight size={17}/></strong><small className="mt-1 block text-muted-foreground">Any urgent concern · no diagnosis needed</small></span></Link>
           <Link href="/assessment" className="group flex min-h-[150px] flex-col justify-between bg-[hsl(var(--card))] p-5 text-inherit no-underline hover:bg-[hsl(var(--primary)/.05)]" data-testid="launch-assessment"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[hsl(var(--primary)/.1)] text-[hsl(var(--primary))]"><Activity/></span><span><strong className="flex items-center justify-between">Record an observation <ArrowRight size={17}/></strong><small className="mt-1 block text-muted-foreground">Self or crewmate · no diagnosis</small></span></Link>
         </div>
       </div>

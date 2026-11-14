@@ -89,21 +89,29 @@ export default function AppShell({ children }: { children: ReactNode }) {
       <div className="topbar-main page-wrap flex min-h-[70px] items-center justify-between gap-4">
         <Link href="/" className="topbar-brand flex items-center gap-3 no-underline text-inherit" data-testid="link-crewcheck-home">
           <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]"><Activity size={21}/></span>
-          <span><span className="block text-[17px] font-extrabold tracking-[-.04em]">CrewCheck</span><span className="block text-[10px] font-bold uppercase tracking-[.14em] text-muted-foreground">Tablet-first PWA</span></span>
+          <span><span className="block text-[17px] font-extrabold tracking-[-.04em]">CrewCheck</span><span className="block text-[10px] font-bold uppercase tracking-[.14em] text-muted-foreground">Training prototype</span></span>
         </Link>
         <nav className="nav-desktop flex items-center gap-1" aria-label="Main navigation">
           {navigation.map(({href,label,icon:Icon}) => <Link key={href} href={href} className="nav-link" aria-current={isCurrentPage(location, href) ? "page" : undefined} data-testid={`link-nav-${label.toLowerCase()}`}><Icon size={19}/>{label}</Link>)}
         </nav>
         <Link href="/emergency" className="topbar-emergency btn btn-danger min-h-[48px] px-4" data-testid="link-emergency-persistent"><Siren size={19}/> Emergency</Link>
       </div>
-      <div className="status-row page-wrap flex min-h-8 flex-wrap items-center justify-end gap-x-4 gap-y-1 pb-2 text-[11px] font-semibold text-muted-foreground" role="status" aria-live="polite">
-        <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap" data-testid="status-connectivity"><span className={`status-dot ${online ? "" : "offline"}`}/>{online ? <><Wifi size={14}/> Online</> : <><WifiOff size={14}/> Offline · records stay on this device</>}</span>
-        <span className={`shrink-0 whitespace-nowrap ${persistence.error ? "text-[hsl(var(--destructive))]" : ""}`} data-testid="status-persistence">{persistence.ready ? "Local storage ready" : persistence.error ? "Persistence unavailable" : "Checking local storage…"}</span>
-        <span className="shrink-0 whitespace-nowrap" data-testid="status-offline-cache">{offlineCache}</span>
-        {!installed && <button type="button" className="install-app-button" onClick={() => void installApp()} data-testid="button-install-pwa"><Download size={15}/>{installPrompt ? "Install CrewCheck" : "Add to Home Screen"}</button>}
-        {installed && <span className="shrink-0 whitespace-nowrap rounded-full bg-[hsl(var(--primary)/.1)] px-2 py-1 text-[hsl(var(--primary))]" data-testid="status-installed">Installed on this device</span>}
-        {installMessage && <span className="shrink-0 whitespace-nowrap text-[hsl(var(--primary))]" data-testid="status-install-message">{installMessage}</span>}
-        <span className="shrink-0 whitespace-nowrap rounded-full bg-[hsl(var(--accent)/.12)] px-2 py-1 text-[hsl(var(--accent))]" data-testid="status-prototype">TRAINING PROTOTYPE</span>
+      <div className="status-row page-wrap flex min-h-8 flex-wrap items-center justify-end gap-x-4 gap-y-1 pb-2 text-[12px] font-semibold text-muted-foreground">
+        <span role="status" aria-live="polite" className="flex flex-wrap items-center gap-x-4 gap-y-1">
+          <span className="flex items-center gap-1.5 whitespace-nowrap" data-testid="status-connectivity"><span className={`status-dot ${online ? "" : "offline"}`}/>{online ? <><Wifi size={14}/> Online</> : <><WifiOff size={14}/> Offline</>}</span>
+          <span className={`whitespace-nowrap ${persistence.error ? "font-bold text-[hsl(var(--destructive))]" : ""}`} data-testid="status-persistence">{persistence.ready ? "Records stay on this tablet" : persistence.error ? "Not saving. Records may be lost." : "Starting…"}</span>
+          {installMessage && <span className="whitespace-nowrap text-[hsl(var(--primary))]" data-testid="status-install-message">{installMessage}</span>}
+        </span>
+        <details className="device-details" data-testid="details-device">
+          <summary data-testid="button-device-details">Device details</summary>
+          <div className="device-panel">
+            <p data-testid="status-offline-cache">{offlineCache}</p>
+            {!online && <p>Records stay on this device while offline.</p>}
+            {installed ? <p className="text-[hsl(var(--primary))]" data-testid="status-installed">Installed on this device</p>
+              : <button type="button" className="install-app-button" onClick={() => void installApp()} data-testid="button-install-pwa"><Download size={15}/>{installPrompt ? "Install CrewCheck" : "Add to Home Screen"}</button>}
+            <p className="text-[hsl(var(--accent))]" data-testid="status-prototype">Training prototype</p>
+          </div>
+        </details>
       </div>
     </header>
     <main className="app-main page-wrap pb-24 pt-8">{children}</main>

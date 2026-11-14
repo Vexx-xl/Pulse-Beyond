@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { ActionEvent, Incident } from "@/lib/local-store";
 import { applyIncidentChange, conditionObservationChanges, nextEmergencyStep } from "./scenario-logic.ts";
-import { hasChestPainReported } from "./observation-logic.ts";
 
 const baseIncident: Incident = {
   id: "incident-1",
@@ -18,23 +17,24 @@ const baseIncident: Incident = {
   unableToAssess: [],
 };
 
-test("emergency acknowledgements advance one step and stop at equipment selection", () => {
+test("help acknowledgements advance one step and stop after sharing facts", () => {
   assert.equal(nextEmergencyStep(0), 1);
   assert.equal(nextEmergencyStep(2), 3);
-  assert.equal(nextEmergencyStep(3), 3);
+  assert.equal(nextEmergencyStep(3), 4);
+  assert.equal(nextEmergencyStep(4), 4);
 });
 
 test("unresponsive or changed breathing records the observation and escalates", () => {
   assert.deepEqual(conditionObservationChanges("responsiveness", "Does not respond"), {
     responsiveness: "Does not respond",
     conditionChanged: true,
-    step: 2,
+    step: 0,
     conditionChangeDetail: "Does not respond",
   });
   assert.deepEqual(conditionObservationChanges("breathingObservation", "Change observed"), {
     breathingObservation: "Change observed",
     conditionChanged: true,
-    step: 2,
+    step: 0,
     conditionChangeDetail: "Change observed",
   });
 });
@@ -55,8 +55,3 @@ test("incident corrections append events without deleting prior history", () => 
   assert.equal(next.events[1].id, "change-1");
 });
 
-test("an empty observation is safe and only an explicit report shows the emergency link", () => {
-  assert.equal(hasChestPainReported(undefined), false);
-  assert.equal(hasChestPainReported(""), false);
-  assert.equal(hasChestPainReported("Chest pain"), true);
-});

@@ -1,7 +1,7 @@
 import type { ActionEvent, Incident } from "@/lib/local-store";
 
 export function nextEmergencyStep(step: number): number {
-  return step >= 3 ? step : Math.max(0, step + 1);
+  return Math.min(4, Math.max(0, step + 1));
 }
 
 export function conditionObservationChanges(
@@ -14,7 +14,7 @@ export function conditionObservationChanges(
   return {
     [field]: value,
     conditionChanged: true,
-    step: 2,
+    step: 0,
     conditionChangeDetail: value,
   };
 }

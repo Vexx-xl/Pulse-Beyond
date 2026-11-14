@@ -8,6 +8,8 @@ export type HelperTask = {
 export type Incident = {
   id: string; patientId: string; patientName: string; startedAt: string; status: string;
   procedureVersion?: string;
+  concern?: string;
+  flow?: "general-help";
   conditionChanged: boolean; step: number; events: ActionEvent[]; helperCount: number;
   equipment: string; unableToAssess: string[]; helperTasks?: HelperTask[];
   responsiveness?: string; breathingObservation?: string; conditionChangeDetail?: string;

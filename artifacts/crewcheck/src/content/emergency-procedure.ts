@@ -1,12 +1,12 @@
-export const EMERGENCY_PROCEDURE_VERSION = "0.1.0-demo";
+export const EMERGENCY_PROCEDURE_VERSION = "0.2.0-general-help";
 export const EMERGENCY_CONTENT_REVIEW = "Team-created simulation; clinical and mission review pending.";
 
 export const EMERGENCY_STEPS = [
   {
     id: "contact-support",
-    trigger: "Fictional acute chest-pain report.",
-    title: "Contact onboard support",
-    instruction: "Contact onboard medical support now using the approved onboard communication procedure.",
+    trigger: "Any urgent concern, including uncertainty about what is wrong.",
+    title: "Call onboard help now",
+    instruction: "Use your mission’s emergency channel to call onboard help. Say where you are and what you can see. This app does not place a call.",
     expectedObservation: "Record whether the contact action was completed or could not be completed.",
     equipmentRequirements: "Mission communication pathway; availability is not assumed.",
     applicability: "Training demonstration only. Use the approved procedure for the configured mission.",
@@ -18,8 +18,8 @@ export const EMERGENCY_STEPS = [
   {
     id: "stay-with-crewmember",
     trigger: "Onboard support contact prompt acknowledged.",
-    title: "Stay with the crewmember",
-    instruction: "Stay with the crewmember. If another helper is available, ask them to make the contact; if alone, make the contact yourself.",
+    title: "Stay nearby if it is safe",
+    instruction: "Do not put yourself in danger. If it is safe, stay with the person. Ask another crewmember to help if one is available.",
     expectedObservation: "Record the helper flow and any changes that are reported or observed.",
     equipmentRequirements: "No equipment specified.",
     applicability: "Generic coordination prompt for the fictional scenario.",
@@ -31,25 +31,25 @@ export const EMERGENCY_STEPS = [
   {
     id: "trained-crew-protocol",
     trigger: "Support contact and patient-facing coordination recorded.",
-    title: "Use trained-crew protocol",
-    instruction: "Follow the applicable onboard trained-crew protocol. Use only procedures you are trained and authorized to perform.",
+    title: "Follow your trained helper’s directions",
+    instruction: "Follow instructions from onboard medical support and your approved emergency plan. Only do actions you have been trained and authorized to do.",
     expectedObservation: "Record the protocol reference or that it was unavailable; this app does not provide the procedure.",
     equipmentRequirements: "Mission-approved procedure and trained crew, as defined by that mission.",
     applicability: "No microgravity, spacecraft, or lunar procedure is supplied by this prototype.",
     supportedAlternatives: "Follow the mission's supported escalation route. Do not substitute an unsupported procedure.",
-    nextStates: ["equipment-availability", "condition-changed"],
+    nextStates: ["share-observations", "condition-changed"],
     sourceReferences: [],
     reviewStatus: EMERGENCY_CONTENT_REVIEW,
   },
   {
-    id: "equipment-availability",
+    id: "share-observations",
     trigger: "Applicable onboard protocol reviewed.",
-    title: "Check device availability",
-    instruction: "If an onboard monitoring device is available, follow only its approved operating instructions. Record whether equipment is available or unavailable.",
-    expectedObservation: "Record available, unavailable, or unable to assess without interpreting a reading.",
-    equipmentRequirements: "Mission inventory and device-specific instructions.",
-    applicability: "Prototype does not validate device suitability or provide operating instructions.",
-    supportedAlternatives: "Record equipment unavailable or unable to assess; continue under the approved onboard plan.",
+    title: "Tell help what you know",
+    instruction: "Share what happened, where the person is, and anything that has changed. It is okay to say “I don’t know.” Do not wait for a measurement.",
+    expectedObservation: "Record only facts the helper knows and explicitly leave unknown details unknown.",
+    equipmentRequirements: "No measurement or equipment is required to share observations.",
+    applicability: "General communication reminder; not a treatment or diagnosis.",
+    supportedAlternatives: "Say what is unknown and continue following onboard help.",
     nextStates: ["handoff", "condition-changed"],
     sourceReferences: [],
     reviewStatus: EMERGENCY_CONTENT_REVIEW,

@@ -2,7 +2,7 @@
 
 CrewCheck is a **tablet-first PWA** for local crew observation and factual handoff. The responsive workspace keeps primary navigation in a large, persistent tablet toolbar and uses a thumb-friendly tab bar on small screens.
 
-CrewCheck is an offline-oriented, tablet-first training and research prototype for recording fictional crew observations, walking through a scripted chest-pain scenario, and preparing a factual handoff. It is not validated medical equipment, flight-qualified software, a clinical decision system, or NASA-endorsed.
+CrewCheck is an offline-oriented training prototype for non-doctor crew: get onboard help for any urgent concern, record only observations, and prepare a factual handoff. It does not diagnose conditions or teach treatment. It is not validated medical equipment, flight-qualified software, a clinical decision system, or NASA-endorsed.
 
 ## Run in Replit
 
@@ -31,7 +31,7 @@ See [DEMO.md](./DEMO.md) for a short walkthrough.
 
 ## Current scope and limitations
 
-- Implemented: fictional crew dashboard; deterministic chest-pain scenario; timestamped local incident history; helper task assignment; local handoff text and JSON export; observations and review; manual BP and pulse-ox record entry; three fictional mission profiles; sample equipment and routines; private local wellbeing entries; habitat overlap timeline; source index; install manifest; service-worker shell caching.
+- Implemented: fictional crew dashboard; general help-first emergency recording; timestamped local incident history; preserved legacy helper tasks; local handoff text and JSON export; observations and review; manual BP and pulse-ox record entry; three fictional mission profiles; sample equipment and routines; private local wellbeing entries; habitat overlap timeline; source index; install manifest; service-worker shell caching.
 - Not implemented: source-reviewed measurement instructions; mission-approved treatment procedures; real NASA dataset excerpt; AI assistance; live devices, telemetry, external transmission, multi-device sync, clinical interpretation, or production access control.
 - The source list contains the project's starting references, not claims that the cited pages were reviewed or approve a procedure.
 - No clinician, crew health officer, NASA, or mission authority review is claimed. Do not use this prototype to make care decisions or delay approved emergency response.

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "wouter";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -104,7 +105,6 @@ function tasksFor(profile: ProfileId): Reminder[] {
 
 export default function MissionPage() {
   const { settings, saveSettings, reminders, saveReminder, persistence, incidents, wellbeing, saveWellbeing } = useRecords();
-  const [tab, setTab] = useState<TabId>("configuration");
   const [message, setMessage] = useState("");
   const profile = profiles[settings.profile];
   const activeIncident = incidents.some((item) => item.status !== "Closed");
@@ -197,114 +197,134 @@ export default function MissionPage() {
     }
   };
 
-  const tabEntries: { id: TabId; label: string }[] = [
-    { id: "configuration", label: "Mission settings" },
-    { id: "equipment", label: "Equipment" },
-    { id: "routines", label: "Routines & wellbeing" },
-    { id: "evidence", label: "Sources" },
+  const [panel, setPanel] = useState<TabId | null>(null);
+  const [task, setTask] = useState<"list" | "followup" | "wellbeing">("list");
+  const commLabel: Record<SettingsValues["communicationStatus"], string> = {
+    "not-configured": "Not set up yet",
+    "available-scenario": "Available",
+    "delayed-scenario": "Delayed",
+    "unavailable-scenario": "Not available",
+  };
+  const nextTask = profileReminders.find((item) => item.status !== "completed");
+  const open = (id: TabId) => { setPanel(panel === id ? null : id); setMessage(""); if (id === "routines") setTask("list"); };
+  const areas: { id: TabId; label: string; hint: string; icon: typeof Radio }[] = [
+    { id: "routines", label: "Daily tasks", hint: "Check off tasks or add a private check-in", icon: CalendarClock },
+    { id: "configuration", label: "Change setup", hint: "Where you are and how you reach support", icon: Radio },
+    { id: "equipment", label: "Where things are", hint: "Sample equipment locations", icon: Package },
+    { id: "evidence", label: "Sources", hint: "References behind this app", icon: Info },
   ];
+  const statusText = (s: string) => s === "overdue" ? "Late" : s === "completed" ? "Done" : s === "rescheduled" ? "Moved" : "To do";
 
   return <div className="reveal">
-    <header className="mb-7">
-      <p className="eyebrow">Configuration · fictional sample data</p>
-      <h1 className="mt-2 text-4xl font-extrabold tracking-[-.05em]">Mission & routines</h1>
-      <p className="mt-3 max-w-2xl leading-6 text-muted-foreground">Profiles change the displayed zones, sample equipment, and fictional schedules. Communication delay stays unconfigured unless the crew enters a mission-specific value.</p>
+    <header className="mb-6">
+      <p className="eyebrow">Mission</p>
+      <h1 className="mt-2 text-4xl font-extrabold tracking-[-.05em]">Your setup</h1>
+      <p className="mt-2 text-sm text-muted-foreground" data-testid="notice-prototype">Training prototype with sample data. It does not give medical advice.</p>
     </header>
 
-    <div className="mb-5 flex flex-wrap gap-2 border-b pb-4" role="tablist" aria-label="Mission areas">
-      {tabEntries.map((item) => <button key={item.id} role="tab" aria-selected={tab === item.id} className={tab === item.id ? "btn btn-primary" : "btn btn-soft"} onClick={() => { setTab(item.id); setMessage(""); }} data-testid={`tab-mission-${item.id}`}>{item.label}</button>)}
+    <section className="card mission-summary p-5 sm:p-7" data-testid="card-mission-summary">
+      <dl className="grid gap-4 sm:grid-cols-3">
+        <div><dt className="eyebrow">Location</dt><dd className="mt-1 text-xl font-extrabold" data-testid="text-current-profile">{profile.label}</dd></div>
+        <div><dt className="eyebrow">Support setting · demo</dt><dd className="mt-1 text-xl font-extrabold" data-testid="text-current-comm">{commLabel[settings.communicationStatus]}</dd></div>
+        <div><dt className="eyebrow">Message delay</dt><dd className="mt-1 text-xl font-extrabold" data-testid="text-current-delay">{settings.communicationDelay || "Not set"}</dd></div>
+      </dl>
+      <div className="mt-6 flex flex-wrap items-center gap-3 border-t pt-5">
+        {activeIncident
+          ? <p className="flex-1 text-sm font-semibold" role="status" data-testid="status-routines-paused-summary">An incident is open. Daily tasks are paused.</p>
+          : <p className="flex-1 text-sm" data-testid="text-next-task">{nextTask ? <>Next: <strong>{nextTask.title}</strong></> : "No tasks waiting."}</p>}
+        {activeIncident ? <Link href="/emergency" className="btn btn-danger no-underline">Return to help record</Link> : <button className="btn btn-primary" onClick={() => open("routines")} data-testid="button-open-tasks"><CalendarClock size={17}/> Open daily tasks</button>}
+      </div>
+    </section>
+
+    <div className="mt-5 grid gap-3 sm:grid-cols-2" aria-label="More mission options">
+      {areas.map(({ id, label, hint, icon: Icon }) => <button key={id} aria-expanded={panel === id} aria-controls={`mission-${id}`} className={`mission-option ${panel === id ? "is-open" : ""}`} onClick={() => open(id)} data-testid={`tab-mission-${id}`}>
+        <Icon size={20}/><span className="text-left"><span className="block font-bold">{label}</span><span className="block text-xs text-muted-foreground">{hint}</span></span>
+      </button>)}
     </div>
 
-    {tab === "configuration" && <div className="grid gap-5 lg:grid-cols-[1.1fr_.9fr]">
-      <section className="card p-5 sm:p-7">
-        <div className="mb-5 flex items-center gap-3"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[hsl(var(--primary)/.1)] text-[hsl(var(--primary))]"><Radio/></span><div><p className="eyebrow">Local mission profile</p><h2 className="text-xl font-extrabold">Context and communication</h2></div></div>
-        <Form {...settingsForm}>
-          <form className="space-y-5" onSubmit={settingsForm.handleSubmit(saveMission)}>
-            <FormField control={settingsForm.control} name="profile" render={({ field }) => <FormItem><FormLabel>Operating environment</FormLabel><FormControl><select className="field mt-2" {...field} data-testid="select-mission-profile"><option value="station">Space station</option><option value="spacecraft">Spacecraft</option><option value="lunar">Lunar surface base</option></select></FormControl><FormMessage/></FormItem>}/>
-            <FormField control={settingsForm.control} name="communicationStatus" render={({ field }) => <FormItem><FormLabel>Communication availability · scenario setting</FormLabel><FormControl><select className="field mt-2" {...field} data-testid="select-communication-status"><option value="not-configured">Not configured</option><option value="available-scenario">Available in this scenario</option><option value="delayed-scenario">Delayed in this scenario</option><option value="unavailable-scenario">Unavailable in this scenario</option></select></FormControl><p className="mt-1 text-xs text-muted-foreground">{profile.communicationNote}</p><FormMessage/></FormItem>}/>
-            <FormField control={settingsForm.control} name="communicationDelay" render={({ field }) => <FormItem><FormLabel>Configured communication delay</FormLabel><FormControl><input className="field mt-2" {...field} placeholder="Not configured" data-testid="input-communication-delay"/></FormControl><p className="mt-1 text-xs text-muted-foreground">No delay is inferred from the profile name or destination.</p><FormMessage/></FormItem>}/>
-            <button className="btn btn-primary" type="submit" disabled={!persistence.ready} data-testid="button-save-mission"><Save size={17}/> Save profile</button>
-            {message && <p role="status" className="text-sm font-semibold" data-testid="status-mission-save">{message}</p>}
-          </form>
-        </Form>
-      </section>
-      <aside className="card p-5 sm:p-6">
-        <div className="flex items-center gap-2"><MapPin size={17} className="text-[hsl(var(--primary))]"/><p className="eyebrow">Displayed environment</p></div>
-        <h2 className="mt-2 text-xl font-extrabold">{profile.label}</h2>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">{profile.gravity}</p>
-        <div className="mt-5 border-t pt-4"><p className="eyebrow">Habitat zones</p><ul className="mt-3 space-y-2">{profile.zones.map((zone) => <li key={zone} className="flex items-center gap-2 text-sm"><MapPin size={15} className="text-muted-foreground"/>{zone}</li>)}</ul></div>
-        <div className="mt-5 border-t pt-4"><p className="eyebrow">Crew role metadata</p><ul className="mt-3 space-y-2 text-sm text-muted-foreground">{profile.crewContext.map((item) => <li key={item}>{item}</li>)}</ul></div>
-        <div className="mt-5 rounded-lg bg-[hsl(var(--muted))] p-3 text-xs leading-5 text-muted-foreground">All profiles, locations, equipment, crew roles, and schedules in this prototype are fictional. Profile changes do not alter or recommend medical procedures.</div>
-      </aside>
-    </div>}
+    {message && <p role="status" className="mt-4 rounded-xl bg-[hsl(var(--primary)/.08)] p-3 text-sm font-semibold" data-testid={panel === "configuration" ? "status-mission-save" : "status-mission-message"}>{message}</p>}
 
-    {tab === "equipment" && <section className="card p-5 sm:p-7">
-      <div className="mb-5 flex items-center gap-3"><span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[hsl(var(--primary)/.1)] text-[hsl(var(--primary))]"><Package/></span><div><p className="eyebrow">Fictional inventory · no live stock feed</p><h2 className="text-xl font-extrabold">Sample equipment locations</h2></div></div>
-      <div className="grid gap-3 md:grid-cols-3">{profile.equipment.map((item) => <article className="rounded-xl border bg-[hsl(var(--background))] p-4" key={item.name}><div className="flex items-center justify-between gap-2"><strong>{item.name}</strong><span className="rounded-full bg-[hsl(var(--muted))] px-2 py-1 text-[10px] font-bold uppercase">Fictional</span></div><p className="mt-3 flex items-start gap-2 text-sm text-muted-foreground"><MapPin size={15} className="mt-0.5 shrink-0"/>{item.location}</p></article>)}</div>
-      <p className="mt-5 rounded-xl border border-[hsl(var(--accent)/.35)] bg-[hsl(var(--accent)/.08)] p-4 text-sm leading-6"><strong>No equipment status is inferred.</strong> Confirm actual inventory and operating instructions onboard. This prototype does not control life-support or habitat hardware.</p>
+    {panel === "configuration" && <section id="mission-configuration" className="card reveal mt-5 p-5 sm:p-7">
+      <h2 className="mb-4 text-xl font-extrabold">Change setup</h2>
+      <Form {...settingsForm}>
+        <form className="space-y-5" onSubmit={settingsForm.handleSubmit(saveMission)}>
+          <FormField control={settingsForm.control} name="profile" render={({ field }) => <FormItem><FormLabel>Where are you?</FormLabel><FormControl><select className="field mt-2" {...field} data-testid="select-mission-profile"><option value="station">Space station</option><option value="spacecraft">Spacecraft</option><option value="lunar">Lunar surface base</option></select></FormControl><FormMessage/></FormItem>}/>
+          <FormField control={settingsForm.control} name="communicationStatus" render={({ field }) => <FormItem><FormLabel>Can you reach support?</FormLabel><FormControl><select className="field mt-2" {...field} data-testid="select-communication-status"><option value="not-configured">Not set up yet</option><option value="available-scenario">Yes, available</option><option value="delayed-scenario">Yes, with a delay</option><option value="unavailable-scenario">No, not available</option></select></FormControl><FormMessage/></FormItem>}/>
+          <FormField control={settingsForm.control} name="communicationDelay" render={({ field }) => <FormItem><FormLabel>Message delay (optional)</FormLabel><FormControl><input className="field mt-2" {...field} placeholder="For example: 20 minutes" data-testid="input-communication-delay"/></FormControl><p className="mt-1 text-xs text-muted-foreground">Only what you enter is used. Nothing is guessed.</p><FormMessage/></FormItem>}/>
+          <button className="btn btn-primary" type="submit" disabled={!persistence.ready} data-testid="button-save-mission"><Save size={17}/> Save setup</button>
+        </form>
+      </Form>
+      <details className="mt-5 border-t pt-4"><summary className="cursor-pointer text-sm font-bold">More about this location</summary>
+        <p className="mt-3 text-sm text-muted-foreground">{profile.gravity}</p>
+        <p className="eyebrow mt-4">Areas</p><ul className="mt-2 space-y-1 text-sm">{profile.zones.map((zone) => <li key={zone} className="flex items-center gap-2"><MapPin size={14}/>{zone}</li>)}</ul>
+        <p className="eyebrow mt-4">Crew roles (sample)</p><ul className="mt-2 space-y-1 text-sm text-muted-foreground">{profile.crewContext.map((item) => <li key={item}>{item}</li>)}</ul>
+        <p className="mt-4 text-xs text-muted-foreground">{profile.communicationNote} Changing the location never changes medical steps.</p>
+      </details>
     </section>}
 
-    {tab === "routines" && <div className="grid gap-5 lg:grid-cols-[1fr_1fr]">
-      <section className="card p-5 sm:p-6">
-        <div className="mb-4 flex items-center gap-3"><CalendarClock className="text-[hsl(var(--primary))]"/><div><p className="eyebrow">No background notifications promised</p><h2 className="text-xl font-extrabold">Fictional routine schedule</h2></div></div>
-        <p className="mb-4 text-sm leading-6 text-muted-foreground">Due states are recalculated when this page opens. No clinical follow-up interval is suggested.</p>
-        {activeIncident && <p className="mb-4 rounded-lg border border-[hsl(var(--destructive)/.3)] bg-[hsl(var(--destructive)/.07)] p-3 text-sm font-semibold" role="status" data-testid="status-routines-paused">Routine interruptions are paused while an incident is active.</p>}
-        <div className="space-y-3">{profileReminders.map((task) => {
-          const due = new Date(task.dueAt).getTime();
-          const status = task.status === "due" && due < Date.now() ? "overdue" : task.status;
-          return <article className="rounded-xl border p-4" key={task.id} data-testid={`reminder-${task.id}`}>
-            <div className="flex flex-wrap items-start justify-between gap-2"><div><strong>{task.title}</strong><p className="mt-1 text-xs text-muted-foreground">{new Date(task.dueAt).toLocaleString()} · fictional schedule</p></div><span className="rounded-full bg-[hsl(var(--muted))] px-2.5 py-1 text-xs font-bold">{status}</span></div>
-            {task.category === "wellbeing" && <button className="btn btn-soft mt-3" onClick={() => setTab("routines")} disabled={activeIncident} data-testid={`button-open-wellbeing-${task.id}`}><Sparkles size={16}/> Record private wellbeing</button>}
-            <div className="mt-3 flex flex-wrap gap-2"><button className="btn btn-soft min-h-10 px-3" disabled={activeIncident || status === "completed"} onClick={() => void updateReminder(task, "completed")} data-testid={`button-complete-${task.id}`}><Check size={15}/> Complete</button><button className="btn btn-soft min-h-10 px-3" disabled={activeIncident || status === "completed"} onClick={() => void updateReminder(task, "rescheduled")} data-testid={`button-reschedule-${task.id}`}>Reschedule 24h</button></div>
+    {panel === "equipment" && <section id="mission-equipment" className="card reveal mt-5 p-5 sm:p-7">
+      <h2 className="mb-4 text-xl font-extrabold">Where things are</h2>
+      <ul className="divide-y">{profile.equipment.map((item) => <li className="flex flex-wrap items-center justify-between gap-2 py-3" key={item.name}><strong>{item.name}</strong><span className="flex items-center gap-1.5 text-sm text-muted-foreground"><MapPin size={14}/>{item.location.split(" · ")[0]}</span></li>)}</ul>
+      <p className="mt-4 text-sm text-muted-foreground">Sample locations only. Check the real kit onboard.</p>
+    </section>}
+
+    {panel === "routines" && <section id="mission-routines" className="card reveal mt-5 p-5 sm:p-7">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-xl font-extrabold">{task === "followup" ? "Add a task" : task === "wellbeing" ? "Private check-in" : "Daily tasks"}</h2>
+        {task !== "list" && <button className="btn btn-soft min-h-10 px-3" onClick={() => setTask("list")} data-testid="button-back-tasks">Back to tasks</button>}
+      </div>
+      {activeIncident && <p className="mb-4 rounded-lg border border-[hsl(var(--destructive)/.3)] bg-[hsl(var(--destructive)/.07)] p-3 text-sm font-semibold" role="status" data-testid="status-routines-paused">An incident is open. Daily tasks are paused.</p>}
+
+      {task === "list" && <>
+        <div className="space-y-3">{profileReminders.map((item) => {
+          const due = new Date(item.dueAt).getTime();
+          const status = item.status === "due" && due < Date.now() ? "overdue" : item.status;
+          return <article className="rounded-xl border p-4" key={item.id} data-testid={`reminder-${item.id}`}>
+            <div className="flex flex-wrap items-start justify-between gap-2"><div><strong>{item.title}</strong><p className="mt-1 text-xs text-muted-foreground">{new Date(item.dueAt).toLocaleString()}</p></div><span className="rounded-full bg-[hsl(var(--muted))] px-2.5 py-1 text-xs font-bold">{statusText(status)}</span></div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {item.category === "wellbeing" && <button className="btn btn-soft min-h-10 px-3" onClick={() => setTask("wellbeing")} disabled={activeIncident} data-testid={`button-open-wellbeing-${item.id}`}><Sparkles size={15}/> Check in</button>}
+              <button className="btn btn-soft min-h-10 px-3" disabled={activeIncident || status === "completed"} onClick={() => void updateReminder(item, "completed")} data-testid={`button-complete-${item.id}`}><Check size={15}/> Done</button>
+              <button className="btn btn-soft min-h-10 px-3" disabled={activeIncident || status === "completed"} onClick={() => void updateReminder(item, "rescheduled")} data-testid={`button-reschedule-${item.id}`}>Move to tomorrow</button>
+            </div>
           </article>;
         })}</div>
-        <div className="mt-5 border-t pt-4"><p className="eyebrow">Mission schedule context</p><ul className="mt-2 space-y-1 text-sm text-muted-foreground">{profile.schedule.map((item) => <li key={item}>{item}</li>)}</ul></div>
-      </section>
+        <div className="mt-5 flex flex-wrap gap-2 border-t pt-4">
+          <button className="btn btn-soft" onClick={() => setTask("followup")} disabled={activeIncident} data-testid="button-show-followup"><ClipboardCheck size={16}/> Add a task</button>
+          <button className="btn btn-soft" onClick={() => setTask("wellbeing")} data-testid="button-show-wellbeing"><Sparkles size={16}/> Private check-in</button>
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">Sample schedule. No phone alerts are sent.</p>
+      </>}
 
-      <div className="grid content-start gap-5">
-        <section className="card p-5 sm:p-6">
-          <div className="mb-4 flex items-center gap-3"><ClipboardCheck className="text-[hsl(var(--primary))]"/><div><p className="eyebrow">Timing must be configured or sourced</p><h2 className="text-xl font-extrabold">Add a follow-up task</h2></div></div>
-          <Form {...followUpForm}><form className="space-y-4" onSubmit={followUpForm.handleSubmit(addFollowUp)}>
-            <FormField control={followUpForm.control} name="title" render={({ field }) => <FormItem><FormLabel>Task</FormLabel><FormControl><input className="field mt-2" {...field} placeholder="Describe the follow-up" data-testid="input-followup-title"/></FormControl><FormMessage/></FormItem>}/>
-            <FormField control={followUpForm.control} name="dueAt" render={({ field }) => <FormItem><FormLabel>Configured due date and time</FormLabel><FormControl><input className="field mt-2" type="datetime-local" {...field} data-testid="input-followup-due"/></FormControl><FormMessage/></FormItem>}/>
-            <button className="btn btn-primary" type="submit" disabled={activeIncident || !persistence.ready} data-testid="button-save-followup"><Save size={16}/> Save task</button>
-          </form></Form>
-        </section>
+      {task === "followup" && <Form {...followUpForm}><form className="space-y-4" onSubmit={followUpForm.handleSubmit(addFollowUp)}>
+        <FormField control={followUpForm.control} name="title" render={({ field }) => <FormItem><FormLabel>What needs doing?</FormLabel><FormControl><input className="field mt-2" {...field} placeholder="Short task name" data-testid="input-followup-title"/></FormControl><FormMessage/></FormItem>}/>
+        <FormField control={followUpForm.control} name="dueAt" render={({ field }) => <FormItem><FormLabel>When?</FormLabel><FormControl><input className="field mt-2" type="datetime-local" {...field} data-testid="input-followup-due"/></FormControl><p className="mt-1 text-xs text-muted-foreground">Use timing from your mission plan or support team.</p><FormMessage/></FormItem>}/>
+        <button className="btn btn-primary" type="submit" disabled={activeIncident || !persistence.ready} data-testid="button-save-followup"><Save size={16}/> Save task</button>
+      </form></Form>}
 
-        <section className="card p-5 sm:p-6">
-          <div className="mb-4"><p className="eyebrow">Private by default in shared handoff</p><h2 className="mt-1 text-xl font-extrabold">Wellbeing check-in</h2></div>
-          <p className="mb-4 flex items-start gap-2 text-xs leading-5 text-muted-foreground"><ShieldAlert size={15} className="mt-0.5 shrink-0"/>This shared-device prototype has no access controls. Entries stay on this device and are not included in the handoff by default.</p>
-          <Form {...wellbeingForm}><form className="space-y-4" onSubmit={wellbeingForm.handleSubmit(saveWellbeingEntry)}>
-            <FormField control={wellbeingForm.control} name="personId" render={({ field }) => <FormItem><FormLabel>Person</FormLabel><FormControl><select className="field mt-2" {...field} data-testid="select-wellbeing-person">{crew.map((person) => <option value={person.id} key={person.id}>{person.name} · fictional</option>)}</select></FormControl><FormMessage/></FormItem>}/>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <FormField control={wellbeingForm.control} name="sleepHours" render={({ field }) => <FormItem><FormLabel>Sleep duration · hours</FormLabel><FormControl><input className="field mt-2" type="number" min="0" max="24" step="0.1" {...field} value={field.value ?? ""} onChange={(event) => field.onChange(event.target.value)} data-testid="input-wellbeing-sleep"/></FormControl><FormMessage/></FormItem>}/>
-              {(["sleepQuality", "fatigue", "mood"] as const).map((name) => <FormField key={name} control={wellbeingForm.control} name={name} render={({ field }) => <FormItem><FormLabel>{name === "sleepQuality" ? "Sleep quality" : name[0].toUpperCase() + name.slice(1)}</FormLabel><FormControl><select className="field mt-2" {...field} data-testid={`select-wellbeing-${name}`}><option>Not recorded</option><option>Self-reported: low</option><option>Self-reported: moderate</option><option>Self-reported: high</option><option>Not sure</option></select></FormControl><FormMessage/></FormItem>}/>)}
-            </div>
-            <FormField control={wellbeingForm.control} name="privateNote" render={({ field }) => <FormItem><FormLabel>Optional private note</FormLabel><FormControl><textarea className="field mt-2 min-h-20" {...field} placeholder="Not included in the handoff." data-testid="input-wellbeing-note"/></FormControl><FormMessage/></FormItem>}/>
-            <button className="btn btn-primary" type="submit" disabled={!persistence.ready} data-testid="button-save-wellbeing"><Save size={16}/> Save private check-in</button>
-          </form></Form>
-          {wellbeing.length > 0 && <div className="mt-4 border-t pt-4"><p className="eyebrow">Recent private entries</p><ul className="mt-2 space-y-2">{wellbeing.slice(0,3).map((entry) => <li key={entry.id} className="text-sm" data-testid={`wellbeing-record-${entry.id}`}><strong>{entry.personName}</strong> · {new Date(entry.at).toLocaleString()}<span className="block text-xs text-muted-foreground">Private on this shared device · not included in handoff</span></li>)}</ul></div>}
-        </section>
-      </div>
-    </div>}
+      {task === "wellbeing" && <>
+        <p className="mb-4 flex items-start gap-2 text-sm text-muted-foreground"><ShieldAlert size={16} className="mt-0.5 shrink-0"/>Stays on this device and is left out of the handoff. Anyone using this tablet can see it.</p>
+        <Form {...wellbeingForm}><form className="space-y-4" onSubmit={wellbeingForm.handleSubmit(saveWellbeingEntry)}>
+          <FormField control={wellbeingForm.control} name="personId" render={({ field }) => <FormItem><FormLabel>Who?</FormLabel><FormControl><select className="field mt-2" {...field} data-testid="select-wellbeing-person">{crew.map((person) => <option value={person.id} key={person.id}>{person.name}</option>)}</select></FormControl><FormMessage/></FormItem>}/>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <FormField control={wellbeingForm.control} name="sleepHours" render={({ field }) => <FormItem><FormLabel>Hours slept</FormLabel><FormControl><input className="field mt-2" type="number" min="0" max="24" step="0.1" {...field} value={field.value ?? ""} onChange={(event) => field.onChange(event.target.value)} data-testid="input-wellbeing-sleep"/></FormControl><FormMessage/></FormItem>}/>
+            {(["sleepQuality", "fatigue", "mood"] as const).map((name) => <FormField key={name} control={wellbeingForm.control} name={name} render={({ field }) => <FormItem><FormLabel>{name === "sleepQuality" ? "Sleep quality" : name === "fatigue" ? "Tiredness" : "Mood"}</FormLabel><FormControl><select className="field mt-2" {...field} data-testid={`select-wellbeing-${name}`}><option value="Not recorded">Skip</option><option value="Self-reported: low">Low</option><option value="Self-reported: moderate">Medium</option><option value="Self-reported: high">High</option><option value="Not sure">Not sure</option></select></FormControl><FormMessage/></FormItem>}/>)}
+          </div>
+          <FormField control={wellbeingForm.control} name="privateNote" render={({ field }) => <FormItem><FormLabel>Private note (optional)</FormLabel><FormControl><textarea className="field mt-2 min-h-20" {...field} placeholder="Not included in the handoff." data-testid="input-wellbeing-note"/></FormControl><FormMessage/></FormItem>}/>
+          <button className="btn btn-primary" type="submit" disabled={!persistence.ready} data-testid="button-save-wellbeing"><Save size={16}/> Save check-in</button>
+        </form></Form>
+        {wellbeing.length > 0 && <div className="mt-4 border-t pt-4"><p className="eyebrow">Recent private check-ins</p><ul className="mt-2 space-y-1">{wellbeing.slice(0,3).map((entry) => <li key={entry.id} className="text-sm" data-testid={`wellbeing-record-${entry.id}`}><strong>{entry.personName}</strong> · {new Date(entry.at).toLocaleString()}</li>)}</ul></div>}
+      </>}
+    </section>}
 
-    {tab === "evidence" && <div className="grid gap-5 lg:grid-cols-[1fr_.8fr]">
-      <section className="card p-5 sm:p-7">
-        <p className="eyebrow">Reference list · external pages may require internet</p>
-        <h2 className="mt-2 text-xl font-extrabold">Sources and research context</h2>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">{SOURCE_INDEX_STATUS}</p>
-        <div className="mt-4 rounded-xl border border-[hsl(var(--accent)/.35)] bg-[hsl(var(--accent)/.08)] p-4 text-sm leading-6" data-testid="notice-dataset-status"><strong>Historical NASA dataset excerpt: not bundled.</strong><p className="mt-1">No dataset values are shown in this prototype. The synthetic habitat change flag is separate from NASA research data and is not merged into a patient record.</p></div>
-        <div className="mt-5 space-y-3">{SOURCE_INDEX.map((source) => <article className="rounded-xl border p-4" key={source.url} data-testid={`source-${source.title.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-")}`}>
-          <div className="flex flex-wrap items-start justify-between gap-3"><div><span className="eyebrow">{source.group}</span><h3 className="mt-1 font-bold">{source.title}</h3></div><span className="rounded-full bg-[hsl(var(--muted))] px-2 py-1 text-[10px] font-bold">Starting reference</span></div>
-          <a className="mt-2 inline-block text-sm font-semibold text-[hsl(var(--primary))] underline underline-offset-4" href={source.url} target="_blank" rel="noreferrer">{source.url}</a>
-          <p className="mt-2 text-xs text-muted-foreground">Not reviewed for mission-specific procedures in this prototype.</p>
-        </article>)}</div>
-      </section>
-      <aside className="grid content-start gap-4">
-        <section className="card p-5"><div className="flex items-center gap-2"><Info size={17}/><p className="eyebrow">Evidence boundaries</p></div><ul className="mt-3 space-y-2 text-sm leading-5 text-muted-foreground"><li>Research information is not live patient data.</li><li>Reported symptoms are not diagnoses.</li><li>Habitat time overlap is not causation or exposure.</li><li>Procedure content requires source and review status.</li><li>Unreviewed treatment content is not supplied.</li></ul></section>
-        <section className="card p-5"><p className="eyebrow">Content review status</p><h3 className="mt-2 font-bold">Team review pending</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">No clinician, crew health officer, NASA, or mission authority review is claimed. Measurement preparation and quality steps remain unavailable pending appropriate source review.</p></section>
-      </aside>
-    </div>}
-    {message && tab !== "configuration" && <p role="status" className="mt-4 text-sm font-semibold" data-testid="status-mission-message">{message}</p>}
+    {panel === "evidence" && <section id="mission-evidence" className="card reveal mt-5 p-5 sm:p-7">
+      <h2 className="text-xl font-extrabold">Sources</h2>
+      <p className="mt-2 text-sm text-muted-foreground">Starting references only. Not reviewed by a doctor or mission authority. Links need internet.</p>
+      <ul className="mt-4 divide-y">{SOURCE_INDEX.map((source) => <li className="py-3" key={source.url} data-testid={`source-${source.title.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-")}`}><span className="eyebrow">{source.group}</span><a className="mt-1 block font-semibold text-[hsl(var(--primary))] underline underline-offset-4" href={source.url} target="_blank" rel="noreferrer">{source.title}</a></li>)}</ul>
+      <details className="mt-4 border-t pt-4"><summary className="cursor-pointer text-sm font-bold">Research details</summary>
+        <p className="mt-3 text-sm text-muted-foreground">{SOURCE_INDEX_STATUS}</p>
+        <p className="mt-3 text-sm" data-testid="notice-dataset-status"><strong>NASA dataset not included.</strong> No research values are shown. The sample habitat flag is separate from research data.</p>
+        <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted-foreground"><li>Research is not live crew data.</li><li>Symptoms are not diagnoses.</li><li>Being in the same area does not mean cause.</li><li>No treatment advice is given.</li></ul>
+      </details>
+    </section>}
   </div>;
 }
