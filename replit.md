@@ -1,4 +1,4 @@
-# CrewCheck
+# Pulse Beyond
 
 Offline-oriented, tablet-first PWA for recording fictional crew observations, coordinating a scripted emergency scenario, and preparing a factual handoff. It is not validated medical equipment, flight-qualified software, clinical decision support, or NASA-endorsed.
 
@@ -23,7 +23,7 @@ Offline-oriented, tablet-first PWA for recording fictional crew observations, co
 
 ## Where things live
 
-- `artifacts/crewcheck/` — CrewCheck PWA frontend, local data layer, emergency, measurement, mission, and handoff views.
+- `artifacts/crewcheck/` — Pulse Beyond PWA frontend, local data layer, emergency, measurement, mission, and handoff views.
 - `artifacts/crewcheck/src/lib/local-store.ts` — IndexedDB record types and browser persistence.
 - `artifacts/crewcheck/public/sw.js` — production service-worker app-shell caching.
 - `artifacts/crewcheck/src/content/` — reviewable emergency and measurement wording, plus source index.
@@ -31,7 +31,7 @@ Offline-oriented, tablet-first PWA for recording fictional crew observations, co
 
 ## Architecture decisions
 
-- Core records stay in browser IndexedDB; the shared API server and PostgreSQL are not used for CrewCheck.
+- Core records stay in browser IndexedDB; the shared API server and PostgreSQL are not used for Pulse Beyond. Keep the existing internal storage identifiers when rebranding so saved records remain available.
 - Mission, equipment, crew, and sensor examples are fictional. Do not present them as live inventory or NASA data.
 - Emergency flow is deterministic; unknown details remain unknown and only reviewed onboard procedures are referenced.
 - Private wellbeing entries are not included in handoff exports, but this shared-device prototype has no access control.
@@ -43,6 +43,7 @@ The prototype includes general emergency-help recording, crew observation/review
 ## Usability requirements
 
 - The users are not doctors. Use plain observations, not diagnoses or clinical interpretation.
+- The product name is Pulse Beyond. Use the user-supplied astronaut logo and its midnight navy, cream, gold and turquoise palette.
 - Keep tablet screens simple: essentials and one next action first; expose setup, research, history, and forms only when requested.
 - Emergency is general help for any urgent concern, not a chest-pain-only scenario. Do not require symptom classification, measurements, or completing a form before showing how to get onboard help.
 

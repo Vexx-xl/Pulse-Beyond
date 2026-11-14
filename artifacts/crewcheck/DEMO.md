@@ -1,4 +1,4 @@
-# CrewCheck demonstration script
+# Pulse Beyond demonstration script
 
 This walkthrough uses fictional data. It demonstrates the interface only; it is not a medical procedure.
 

@@ -15,7 +15,7 @@ export default function HandoffPage() {
     if (!incident) return "No incident facts have been entered on this device.";
     const confirmedEvents = incident.events.filter((item) => item.confirmed);
     return [
-      "CREWCHECK · LOCAL HANDOFF (training prototype)",
+      "PULSE BEYOND · LOCAL HANDOFF (training prototype)",
       "Not validated medical equipment or flight-qualified software. Not NASA-endorsed.",
       "",
       `Person: ${incident.patientName}${incident.patientId === "unknown" ? " (identity not entered)" : " (fictional sample profile)"}`,
@@ -50,6 +50,7 @@ export default function HandoffPage() {
   useEffect(() => { setReport(generated); }, [generated]);
   const structured = useMemo(() => incident ? {
     schema: "crewcheck-handoff-v1",
+    app: "Pulse Beyond",
     prototype: true,
     disclaimer: "Training prototype only; not validated medical equipment or flight-qualified software; not NASA-endorsed.",
     incident: {
@@ -70,7 +71,7 @@ export default function HandoffPage() {
     observations: related.map(({ person, observer, at, observations, notes }) => ({ person, observer, at, observations, notes })),
     measurements: relatedMeasurements.map(({ kind, personId, personName, observer, at, systolic, diastolic, spo2, pulse, device, quality, note, source, simulated }) => ({ kind, personId, personName, observer, at, systolic: systolic ?? null, diastolic: diastolic ?? null, spo2: spo2 ?? null, pulse: pulse ?? null, device, quality, note, source, simulated })),
     unknowns: ["No diagnosis or cause inferred", "No treatment guidance generated"]
-  } : { schema: "crewcheck-handoff-v1", prototype: true, incident: null, observations: [], measurements: [] }, [incident, related, relatedMeasurements]);
+  } : { schema: "crewcheck-handoff-v1", app: "Pulse Beyond", prototype: true, incident: null, observations: [], measurements: [] }, [incident, related, relatedMeasurements]);
   const copy = async (text: string, kind: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -84,7 +85,7 @@ export default function HandoffPage() {
   const downloadJson = () => {
     const blob = new Blob([JSON.stringify(structured, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob); const anchor = document.createElement("a");
-    anchor.href = url; anchor.download = `crewcheck-handoff-${incident?.id || "empty"}.json`; anchor.click(); URL.revokeObjectURL(url);
+    anchor.href = url; anchor.download = `pulse-beyond-handoff-${incident?.id || "empty"}.json`; anchor.click(); URL.revokeObjectURL(url);
   };
   return <div className="reveal">
     <header className="mb-7"><p className="eyebrow">Continuity · local export</p><h1 className="mt-2 text-4xl font-extrabold tracking-[-.05em]">Handoff</h1><p className="mt-3 max-w-2xl leading-6 text-muted-foreground">A factual template built from entered and confirmed information only. Review and edit before sharing. Copy and JSON export work without a network connection.</p></header>

@@ -1,12 +1,12 @@
-# CrewCheck
+# Pulse Beyond
 
-CrewCheck is a **tablet-first PWA** for local crew observation and factual handoff. The responsive workspace keeps primary navigation in a large, persistent tablet toolbar and uses a thumb-friendly tab bar on small screens.
+Pulse Beyond is a **tablet-first PWA** for local crew observation and factual handoff. The responsive workspace keeps primary navigation in a large, persistent tablet toolbar and uses a thumb-friendly tab bar on small screens.
 
-CrewCheck is an offline-oriented training prototype for non-doctor crew: get onboard help for any urgent concern, record only observations, and prepare a factual handoff. It does not diagnose conditions or teach treatment. It is not validated medical equipment, flight-qualified software, a clinical decision system, or NASA-endorsed.
+Pulse Beyond is an offline-oriented training prototype for non-doctor crew: get onboard help for any urgent concern, record only observations, and prepare a factual handoff. It does not diagnose conditions or teach treatment. It is not validated medical equipment, flight-qualified software, a clinical decision system, or NASA-endorsed.
 
 ## Run in Replit
 
-Use the CrewCheck web preview. The project runs through its managed Replit workflow; records are stored in the browser's IndexedDB and are not sent to the shared API or a cloud database.
+Use the Pulse Beyond web preview. The project runs through its managed Replit workflow; records are stored in the browser's IndexedDB and are not sent to the shared API or a cloud database.
 
 ## Offline preparation
 

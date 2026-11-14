@@ -1,29 +1,29 @@
 {
-  "name": "CrewCheck",
-  "short_name": "CrewCheck",
+  "name": "Pulse Beyond",
+  "short_name": "Pulse Beyond",
   "description": "A tablet-first, local-only PWA for crew observation and factual handoff.",
   "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#f5f1e8",
-  "theme_color": "#28576a",
+  "background_color": "#00072f",
+  "theme_color": "#00072f",
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/favicon.png",
+      "sizes": "64x64",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/crewcheck-192.png",
+      "src": "/pulse-beyond-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/crewcheck-512.png",
+      "src": "/pulse-beyond-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"

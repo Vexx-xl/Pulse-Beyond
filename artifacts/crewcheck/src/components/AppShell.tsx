@@ -54,7 +54,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
     const onInstalled = () => {
       setInstalled(true);
       setInstallPrompt(null);
-      setInstallMessage("CrewCheck was added to this device.");
+      setInstallMessage("Pulse Beyond was added to this device.");
     };
     checkInstalled();
     displayMode.addEventListener("change", checkInstalled);
@@ -76,7 +76,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
       const prompt = installPrompt;
       await prompt.prompt();
       const choice = await prompt.userChoice;
-      setInstallMessage(choice.outcome === "accepted" ? "CrewCheck was added to this device." : "Install was dismissed. You can add CrewCheck from the browser menu later.");
+      setInstallMessage(choice.outcome === "accepted" ? "Pulse Beyond was added to this device." : "Install was dismissed. You can add Pulse Beyond from the browser menu later.");
       if (choice.outcome === "accepted") setInstalled(true);
       setInstallPrompt(null);
     } catch {
@@ -88,8 +88,8 @@ export default function AppShell({ children }: { children: ReactNode }) {
     <header className="topbar sticky top-0 z-20">
       <div className="topbar-main page-wrap flex min-h-[70px] items-center justify-between gap-4">
         <Link href="/" className="topbar-brand flex items-center gap-3 no-underline text-inherit" data-testid="link-crewcheck-home">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]"><Activity size={21}/></span>
-          <span><span className="block text-[17px] font-extrabold tracking-[-.04em]">CrewCheck</span><span className="block text-[10px] font-bold uppercase tracking-[.14em] text-muted-foreground">Training prototype</span></span>
+          <img src={`${import.meta.env.BASE_URL}pulse-beyond-logo.png`} alt="Pulse Beyond logo" className="brand-logo" width={52} height={52}/>
+          <span><span className="brand-name block text-[18px] leading-tight">Pulse <b>Beyond</b></span><span className="block text-[10px] font-bold uppercase tracking-[.14em] text-[hsl(var(--gold)/.8)]">Training prototype</span></span>
         </Link>
         <nav className="nav-desktop flex items-center gap-1" aria-label="Main navigation">
           {navigation.map(({href,label,icon:Icon}) => <Link key={href} href={href} className="nav-link" aria-current={isCurrentPage(location, href) ? "page" : undefined} data-testid={`link-nav-${label.toLowerCase()}`}><Icon size={19}/>{label}</Link>)}
@@ -108,7 +108,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
             <p data-testid="status-offline-cache">{offlineCache}</p>
             {!online && <p>Records stay on this device while offline.</p>}
             {installed ? <p className="text-[hsl(var(--primary))]" data-testid="status-installed">Installed on this device</p>
-              : <button type="button" className="install-app-button" onClick={() => void installApp()} data-testid="button-install-pwa"><Download size={15}/>{installPrompt ? "Install CrewCheck" : "Add to Home Screen"}</button>}
+              : <button type="button" className="install-app-button" onClick={() => void installApp()} data-testid="button-install-pwa"><Download size={15}/>{installPrompt ? "Install Pulse Beyond" : "Add to Home Screen"}</button>}
             <p className="text-[hsl(var(--accent))]" data-testid="status-prototype">Training prototype</p>
           </div>
         </details>
@@ -121,13 +121,13 @@ export default function AppShell({ children }: { children: ReactNode }) {
     <Dialog open={installGuideOpen} onOpenChange={setInstallGuideOpen}>
       <DialogContent className="rounded-2xl p-6 sm:p-8" data-testid="dialog-install-guide">
         <DialogHeader className="text-left">
-          <DialogTitle className="text-2xl font-extrabold">Add CrewCheck to this device</DialogTitle>
+          <DialogTitle className="text-2xl font-extrabold">Add Pulse Beyond to this device</DialogTitle>
           <DialogDescription>Use it like an app from your tablet’s Home Screen.</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 text-sm leading-6">
           <div><strong>iPad or iPhone:</strong> In Safari, tap Share, then choose <strong>Add to Home Screen</strong>.</div>
           <div><strong>Android tablet or Chrome:</strong> Open the browser menu and choose <strong>Install app</strong> or <strong>Add to Home Screen</strong>.</div>
-          <div><strong>Offline use:</strong> Install while online, then open the screens you need once before disconnecting. CrewCheck keeps records on this device; it does not sync them to other devices.</div>
+          <div><strong>Offline use:</strong> Install while online, then open the screens you need once before disconnecting. Pulse Beyond keeps records on this device; it does not sync them to other devices.</div>
           {!import.meta.env.PROD && <p className="rounded-xl bg-[hsl(var(--muted))] p-3 text-muted-foreground">The current workspace preview does not enable the offline app shell. Offline setup is available in the installed production build.</p>}
         </div>
         {installMessage && <p role="status" className="text-sm font-semibold text-[hsl(var(--primary))]">{installMessage}</p>}

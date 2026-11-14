@@ -87,7 +87,7 @@ function openDb(): Promise<IDBDatabase> {
     };
     request.onblocked = () => {
       dbPromise = null;
-      reject(new Error("Local storage upgrade is blocked by another open CrewCheck tab."));
+      reject(new Error("Local storage upgrade is blocked by another open Pulse Beyond tab."));
     };
   });
   return dbPromise;

@@ -1,6 +1,6 @@
 kind = "web"
 previewPath = "/"
-title = "CrewCheck"
+title = "Pulse Beyond"
 description = "An offline-first, tablet-friendly spaceflight crew health prototype for guided observations, emergency coordination, and clear medical handoffs. It is a research and training prototype, not validated medical equipment or flight-qualified software."
 version = "1.0.0"
 id = "artifacts/crewcheck"
