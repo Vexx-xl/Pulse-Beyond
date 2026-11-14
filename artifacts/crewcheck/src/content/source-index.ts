@@ -1,4 +1,7 @@
 export const SOURCE_INDEX = [
+  { group: "NASA visual reference", title: "ISS (A) 3D model · NASA/Ames Research Center", url: "https://science.nasa.gov/3d-resources/international-space-station-iss-a/" },
+  { group: "NASA visual reference", title: "NASA 3D Resources", url: "https://science.nasa.gov/3d-resources/" },
+  { group: "NASA usage guidance", title: "NASA Images and Media Usage Guidelines", url: "https://www.nasa.gov/nasa-brand-center/images-and-media/" },
   { group: "NASA research context", title: "NASA Human Research Program hazards", url: "https://www.nasa.gov/hrp/hazards/" },
   { group: "NASA research context", title: "NASA Human Research Program risks", url: "https://www.nasa.gov/hrp/risks/" },
   { group: "NASA research context", title: "NASA ongoing HRP research", url: "https://www.nasa.gov/hrp/ongoing-hrp-research/" },

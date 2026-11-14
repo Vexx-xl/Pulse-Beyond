@@ -1,5 +1,29 @@
 # Pulse Beyond
 
+## Optional NASA station reference
+
+Open **Habitat → Optional: NASA station exterior reference** for the ISS preview.
+**Explore in 3D** loads the interactive renderer only when requested. Drag/pinch
+or use the accessible rotation, zoom and reset buttons. There is no automatic
+rotation or continuous rendering loop.
+
+The original NASA/Ames ISS (A) model is 39,708 bytes. Its preview, local Draco
+decoder and license notices bring the static reference directory to about
+500 KB. No third-party viewer CDN or remote texture is required. Credits and
+source links appear in the page's expandable details and `public/nasa/NOTICE.md`.
+Reproduce these files with `node artifacts/crewcheck/scripts/prepare-station-assets.mjs`.
+
+The installed production app precaches the image, model and decoder. Use
+**Save for offline** online to also cache the on-demand renderer and its JS
+chunks; success is shown only after the service worker confirms caching.
+Offline saving is intentionally unavailable in Vite's development preview.
+Browser storage eviction or clearing site data can remove cached assets.
+
+This is an illustrative **exterior reference only**: not an interior/equipment
+map, current verified configuration, medical reference or live tracker. The
+app's fictional habitat zones are not assigned to NASA model geometry. Emergency
+and record workflows do not depend on this viewer.
+
 Pulse Beyond is a **tablet-first PWA** for local crew observation and factual handoff. The responsive workspace keeps primary navigation in a large, persistent tablet toolbar and uses a thumb-friendly tab bar on small screens.
 
 Pulse Beyond is an offline-oriented training prototype for non-doctor crew: get onboard help for any urgent concern, record only observations, and prepare a factual handoff. It does not diagnose conditions or teach treatment. It is not validated medical equipment, flight-qualified software, a clinical decision system, or NASA-endorsed.

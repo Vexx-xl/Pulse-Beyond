@@ -1,0 +1,1 @@
+- [NASA asset selection](nasa-asset-selection.md) — evaluate decoder and viewer overhead, not just the catalog download size, for offline tablet features.

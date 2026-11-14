@@ -6,6 +6,7 @@ import NotFound from '@/pages/not-found';
 import Home from '@/pages/Home';
 import Emergency from '@/pages/Emergency';
 import Habitat from '@/pages/Habitat';
+import Station from '@/pages/Station';
 import Handoff from '@/pages/Handoff';
 import Assessment from '@/pages/Assessment';
 import Measurements from '@/pages/Measurements';
@@ -29,6 +30,7 @@ function Router() {
             <Route path="/" component={Home} />
             <Route path="/emergency" component={Emergency} />
             <Route path="/habitat" component={Habitat} />
+            <Route path="/station" component={Station} />
             <Route path="/handoff" component={Handoff} />
             <Route path="/assessment" component={Assessment} />
             <Route path="/review" component={AssessmentReview} />

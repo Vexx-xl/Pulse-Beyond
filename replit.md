@@ -33,6 +33,7 @@ Offline-oriented, tablet-first PWA for recording fictional crew observations, co
 
 - Core records stay in browser IndexedDB; the shared API server and PostgreSQL are not used for Pulse Beyond. Keep the existing internal storage identifiers when rebranding so saved records remain available.
 - Mission, equipment, crew, and sensor examples are fictional. Do not present them as live inventory or NASA data.
+- NASA 3D assets are optional illustrative references, separate from fictional habitat zones. They do not establish verified current layouts, medical procedures, equipment positions or live telemetry. Self-host their decoding dependencies for offline use.
 - Emergency flow is deterministic; unknown details remain unknown and only reviewed onboard procedures are referenced.
 - Private wellbeing entries are not included in handoff exports, but this shared-device prototype has no access control.
 

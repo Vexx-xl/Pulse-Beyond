@@ -1,7 +1,12 @@
-const CACHE_NAME = "crewcheck-shell-v2-pulse-beyond";
+const CACHE_NAME = "crewcheck-shell-v3-nasa-reference";
 const APP_ROOT = new URL("./", self.registration.scope).href;
 const APP_INDEX = new URL("index.html", APP_ROOT).href;
-const APP_SHELL = [APP_ROOT, APP_INDEX];
+const APP_SHELL = [APP_ROOT, APP_INDEX, ...[
+  "nasa/iss-a-preview.png",
+  "nasa/iss-a.glb",
+  "nasa/draco/draco_wasm_wrapper.js",
+  "nasa/draco/draco_decoder.wasm",
+].map((path) => new URL(path, APP_ROOT).href)];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
