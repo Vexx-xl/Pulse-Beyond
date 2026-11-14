@@ -67,7 +67,7 @@ export default function AssessmentPage() {
       <label className="mt-5 block"><span className="sr-only">Your report</span>
         <textarea className="field min-h-48 text-lg leading-7" value={draft.report} onChange={(e) => setDraft((d) => ({ ...d, report: e.target.value }))} placeholder="For example: my head has hurt since the last shift and I feel dizzy when I stand." data-testid="input-report"/>
       </label>
-      {voice.interim && <p className="mt-2 rounded-xl border border-dashed p-3 text-sm italic text-muted-foreground" aria-live="polite" data-testid="text-voice-interim">Hearing: {voice.interim} <span className="not-italic">(not added yet)</span></p>}
+      {voice.interim && <p className="mt-2 rounded-xl border border-dashed p-3 text-sm italic text-muted-foreground" aria-live="polite" data-testid="text-voice-interim">Hearing: {voice.interim} <span className="not-italic">(added when you pause or stop; check the wording)</span></p>}
       <p className="mt-2 text-xs text-muted-foreground">Typing stays on this device and works offline. These are guided reporting prompts, not a diagnosis or safety assessment.</p>
 
       <div className="mt-5 rounded-2xl border p-4">
@@ -77,12 +77,19 @@ export default function AssessmentPage() {
             <input type="checkbox" className="mt-1 h-6 w-6 shrink-0" checked={consent} onChange={(e) => { setConsent(e.target.checked); if (!e.target.checked && voice.listening) voice.stop(); }} data-testid="checkbox-voice-consent"/>
             <span>I understand this browser may send my audio to its speech provider, and voice may need an Internet connection.</span>
           </label>
-          <button type="button" className={`btn mt-3 w-full sm:w-auto ${voice.listening ? "btn-primary" : "btn-soft"}`} disabled={!consent} style={{ opacity: consent ? 1 : .5 }} onClick={voice.listening ? voice.stop : startVoice} data-testid="button-voice-toggle">
-            {voice.listening ? <><MicOff size={18}/> Stop listening</> : <><Mic size={18}/> Start speaking</>}
+          <button type="button" className={`btn mt-3 w-full sm:w-auto ${voice.listening ? "btn-primary" : "btn-soft"}`} disabled={!consent || voice.status === "stopping"} style={{ opacity: consent ? 1 : .5 }} onClick={voice.listening ? voice.stop : startVoice} data-testid="button-voice-toggle">
+            {voice.status === "stopping" ? "Keeping captured words…" : voice.listening ? <><MicOff size={18}/> Stop listening</> : <><Mic size={18}/> Start speaking</>}
           </button>
-          {voice.listening && <p className="mt-2 text-sm text-[hsl(var(--primary))]" role="status">Listening. Recognised words are added to the text above for you to check.</p>}
+          {voice.status === "starting" && <p className="mt-2 text-sm" role="status">Connecting to the browser's speech service… Allow microphone access if asked. Wait for “Listening” before speaking.</p>}
+          {voice.status === "listening" && <p className="mt-2 text-sm text-[hsl(var(--primary))]" role="status">Listening in English. Speak, then tap Stop listening. Check the captured words above before continuing.</p>}
         </>}
         {voice.error && <p className="mt-2 text-sm text-destructive" role="alert" data-testid="text-voice-error">{voice.error} You can keep typing.</p>}
+        <details className="mt-3 text-sm">
+          <summary className="min-h-12 cursor-pointer py-3 font-bold">Voice not capturing words?</summary>
+          <p className="leading-6 text-muted-foreground">Microphone permission does not guarantee the browser's online speech service is available. Tap the text box and use the microphone on your tablet keyboard instead, if available. You can edit dictated words normally.</p>
+          <a className="btn btn-soft mt-3 no-underline" href={window.location.href} target="_blank" rel="noopener noreferrer" data-testid="link-voice-new-tab">Open this page in a new tab</a>
+          <p className="mt-2 text-xs text-muted-foreground">The new tab has a separate draft. Keep this tab open for any words already entered.</p>
+        </details>
       </div>
 
       <details className="mt-4 rounded-2xl border p-4" data-testid="details-context">
@@ -95,7 +102,7 @@ export default function AssessmentPage() {
         </div>
       </details>
 
-      <button className="btn btn-primary mt-6 w-full text-lg" disabled={!draft.report.trim()} style={{ opacity: draft.report.trim() ? 1 : .5 }} onClick={() => { voice.stop(); go("safety"); }} data-testid="button-continue-report">Continue <ArrowRight size={18}/></button>
+      <button className="btn btn-primary mt-6 w-full text-lg" disabled={!draft.report.trim() || voice.listening} style={{ opacity: draft.report.trim() && !voice.listening ? 1 : .5 }} onClick={() => go("safety")} data-testid="button-continue-report">Continue <ArrowRight size={18}/></button>
     </section>
 
     : draft.stage === "safety" ? <section className="card p-5 sm:p-8">
