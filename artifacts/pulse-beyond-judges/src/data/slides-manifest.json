@@ -1,0 +1,58 @@
+[
+  {
+    "id": "c2843d5c-0967-46e9-9a21-5821bed6fde1",
+    "position": 1,
+    "filepath": "src/pages/slides/Cover.tsx",
+    "title": "Pulse Beyond",
+    "description": "Pulse Beyond",
+    "speakerNotes": ""
+  },
+  {
+    "id": "9fde5f64-32ab-49b3-91c8-691eaf6c80e6",
+    "position": 2,
+    "filepath": "src/pages/slides/Problem.tsx",
+    "title": "When someone feels unwell, clarity matters.",
+    "description": "When someone feels unwell, clarity matters.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "b3d55a87-7711-462f-9dc2-a4bb3ac1c7bb",
+    "position": 3,
+    "filepath": "src/pages/slides/Team.tsx",
+    "title": "Three disciplines. One crew-centered mission.",
+    "description": "Three disciplines. One crew-centered mission.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "b23a61c0-08c1-4b0e-a2d5-6a0dec202908",
+    "position": 4,
+    "filepath": "src/pages/slides/Demo.tsx",
+    "title": "Demo: “I feel dizzy when I stand.”",
+    "description": "Demo: “I feel dizzy when I stand.”",
+    "speakerNotes": ""
+  },
+  {
+    "id": "d47f12eb-e68a-42f0-ae12-47b2e6045333",
+    "position": 5,
+    "filepath": "src/pages/slides/Handoff.tsx",
+    "title": "From a concern to a clear handoff.",
+    "description": "From a concern to a clear handoff.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "2c2e5b97-cbd9-4f82-9af0-81bedb7de9cd",
+    "position": 6,
+    "filepath": "src/pages/slides/Credibility.tsx",
+    "title": "Credibility means showing what we know—and what we don’t.",
+    "description": "Credibility means showing what we know—and what we don’t.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "55fdf5ff-c9d0-485b-961b-9a70cbb2e5c8",
+    "position": 7,
+    "filepath": "src/pages/slides/Close.tsx",
+    "title": "Help the crew be heard. Help support receive the facts.",
+    "description": "Help the crew be heard. Help support receive the facts.",
+    "speakerNotes": ""
+  }
+]

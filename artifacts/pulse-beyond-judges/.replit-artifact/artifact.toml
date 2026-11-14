@@ -1,0 +1,28 @@
+kind = "slides"
+previewPath = "/pulse-beyond-judges/"
+title = "Pulse Beyond — Judges Presentation"
+description = "A seven-slide, plain-language presentation of the Pulse Beyond team, challenge, fictional project demo, intended impact, creativity and scientific limitations for NASA challenge judges."
+version = "1.0.0"
+id = "artifacts/pulse-beyond-judges"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/pulse-beyond-judges/" ]
+localPort = 20283
+
+[services.development]
+run = "pnpm --filter @workspace/pulse-beyond-judges run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/pulse-beyond-judges", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/pulse-beyond-judges/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20283"
+BASE_PATH = "/pulse-beyond-judges/"
