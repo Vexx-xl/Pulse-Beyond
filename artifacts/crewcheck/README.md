@@ -1,5 +1,7 @@
 # CrewCheck
 
+CrewCheck is a **tablet-first PWA** for local crew observation and factual handoff. The responsive workspace keeps primary navigation in a large, persistent tablet toolbar and uses a thumb-friendly tab bar on small screens.
+
 CrewCheck is an offline-oriented, tablet-first training and research prototype for recording fictional crew observations, walking through a scripted chest-pain scenario, and preparing a factual handoff. It is not validated medical equipment, flight-qualified software, a clinical decision system, or NASA-endorsed.
 
 ## Run in Replit

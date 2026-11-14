@@ -63,14 +63,14 @@ function App() {
           channel.port1.onmessage = (event: MessageEvent<{ status?: string }>) => {
             window.clearTimeout(timeout);
             window.dispatchEvent(new CustomEvent("crewcheck-offline-cache", {
-              detail: event.data?.status === "ready" ? "Offline shell and loaded assets prepared" : "Offline preparation incomplete",
+              detail: event.data?.status === "ready" ? "This screen is ready for offline use" : "Offline setup did not finish; retry while online",
             }));
           };
           registration.active?.postMessage({ type: "PRECACHE_VISITED", urls }, [channel.port2]);
         })
-        .catch(() => window.dispatchEvent(new CustomEvent("crewcheck-offline-cache", { detail: "Offline preparation unavailable" })));
+        .catch(() => window.dispatchEvent(new CustomEvent("crewcheck-offline-cache", { detail: "Offline setup did not finish; retry while online" })));
     } else {
-      window.dispatchEvent(new CustomEvent("crewcheck-offline-cache", { detail: "Offline cache requires a production HTTPS build" }));
+      window.dispatchEvent(new CustomEvent("crewcheck-offline-cache", { detail: "Offline setup is available in the installed app" }));
     }
   }, []);
   return (

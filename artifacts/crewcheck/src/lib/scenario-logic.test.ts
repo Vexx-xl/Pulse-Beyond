@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { ActionEvent, Incident } from "@/lib/local-store";
 import { applyIncidentChange, conditionObservationChanges, nextEmergencyStep } from "./scenario-logic.ts";
+import { hasChestPainReported } from "./observation-logic.ts";
 
 const baseIncident: Incident = {
   id: "incident-1",
@@ -52,4 +53,10 @@ test("incident corrections append events without deleting prior history", () => 
   assert.equal(next.events.length, 2);
   assert.equal(next.events[0].id, "start");
   assert.equal(next.events[1].id, "change-1");
+});
+
+test("an empty observation is safe and only an explicit report shows the emergency link", () => {
+  assert.equal(hasChestPainReported(undefined), false);
+  assert.equal(hasChestPainReported(""), false);
+  assert.equal(hasChestPainReported("Chest pain"), true);
 });

@@ -1,6 +1,6 @@
 # CrewCheck
 
-Offline-oriented, tablet-first crew health training prototype for recording fictional observations, coordinating a scripted emergency scenario, and preparing a factual handoff. It is not validated medical equipment, flight-qualified software, clinical decision support, or NASA-endorsed.
+Offline-oriented, tablet-first PWA for recording fictional crew observations, coordinating a scripted emergency scenario, and preparing a factual handoff. It is not validated medical equipment, flight-qualified software, clinical decision support, or NASA-endorsed.
 
 ## Run & Operate
 
