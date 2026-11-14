@@ -1,12 +1,13 @@
-# [Project name]
+# CrewCheck
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Offline-oriented, tablet-first crew health training prototype for recording fictional observations, coordinating a scripted emergency scenario, and preparing a factual handoff. It is not validated medical equipment, flight-qualified software, clinical decision support, or NASA-endorsed.
 
 ## Run & Operate
 
 - `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
+- `pnpm --filter @workspace/crewcheck run test:unit` — deterministic emergency-state tests
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
 - Required env: `DATABASE_URL` — Postgres connection string
@@ -22,19 +23,26 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/crewcheck/` — CrewCheck PWA frontend, local data layer, emergency, measurement, mission, and handoff views.
+- `artifacts/crewcheck/src/lib/local-store.ts` — IndexedDB record types and browser persistence.
+- `artifacts/crewcheck/public/sw.js` — production service-worker app-shell caching.
+- `artifacts/crewcheck/src/content/` — reviewable emergency and measurement wording, plus source index.
+- `artifacts/crewcheck/README.md` and `DEMO.md` — run limitations and demo walkthrough.
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Core records stay in browser IndexedDB; the shared API server and PostgreSQL are not used for CrewCheck.
+- Mission, equipment, crew, and sensor examples are fictional. Do not present them as live inventory or NASA data.
+- Emergency flow is deterministic; unknown details remain unknown and only reviewed onboard procedures are referenced.
+- Private wellbeing entries are not included in handoff exports, but this shared-device prototype has no access control.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+The first prototype milestone includes a fictional chest-pain scenario, crew observation/review, manual measurement entry, mission profiles, fictional routines/equipment, a non-causal habitat timeline, and offline handoff exports. Source-reviewed procedures, real data integrations, AI, live devices, and production-grade access control are not implemented.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Use Free Mode first. Notify the user before recommending or switching to paid Power usage.
 
 ## Gotchas
 

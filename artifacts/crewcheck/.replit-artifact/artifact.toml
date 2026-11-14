@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "CrewCheck"
+description = "An offline-first, tablet-friendly spaceflight crew health prototype for guided observations, emergency coordination, and clear medical handoffs. It is a research and training prototype, not validated medical equipment or flight-qualified software."
+version = "1.0.0"
+id = "artifacts/crewcheck"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19742
+
+[services.development]
+run = "pnpm --filter @workspace/crewcheck run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/crewcheck", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/crewcheck/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19742"
+BASE_PATH = "/"

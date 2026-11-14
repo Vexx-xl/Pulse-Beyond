@@ -1,0 +1,711 @@
+Build CrewCheck, an offline-capable, tablet-first Progressive Web App for the NASA Space Apps Challenge.
+
+TEAM
+Our team is Pulse Beyond:
+- Abdullah: computer science student; product, interface, and usability lead.
+- Jafar: software engineering student; application logic, storage, offline operation, and integrations.
+- Omar: medical student; scientific research, sourced content, and scenario review.
+
+We have approximately 20 working hours per person. Build a polished, coherent prototype within that scope. Prioritize reliable core workflows over decorative complexity.
+
+Start implementing the application after briefly outlining your implementation milestones. Do not stop after producing a plan or a static mockup. Build functional navigation, state transitions, storage, and demonstrations.
+
+1. PRODUCT PURPOSE
+
+CrewCheck helps astronauts:
+- Assess their own health.
+- Assist a crewmate who may be ill or injured.
+- Follow understandable measurement and emergency instructions.
+- Coordinate available helpers.
+- Understand possible relationships between crew observations and habitat conditions.
+- Maintain routines and follow-up tasks.
+- Prepare an accurate medical handoff when support from Earth is delayed or unavailable.
+
+The central concept is:
+PERSON + CREW + HABITAT.
+
+The signature demonstration is a crewmember developing sharp chest pain while the application also surfaces potentially relevant habitat observations.
+
+Emergency assistance and habitat investigation run in parallel when helpers are available. Environmental analysis must never delay patient assistance or dismiss symptoms.
+
+This is a hackathon research and training prototype. It is not validated medical equipment or flight-qualified software.
+
+2. PRODUCT AND TECHNICAL DECISIONS
+
+Build a PWA, not an Electron application or Windows-only executable.
+
+Preferred implementation:
+- React and TypeScript.
+- Vite or an equivalent lightweight setup compatible with Replit.
+- A consistent component system and responsive styling.
+- IndexedDB for local records, using a maintained wrapper if helpful.
+- A service worker for offline application assets and procedure content.
+- A small server-side endpoint only for optional AI assistance.
+- A lightweight chart library if needed.
+
+Replit is the development and hosting environment. The core app must operate on the user's device after initial online preparation.
+
+Do not make emergency access, records, assessments, or handoff generation depend on:
+- Replit's database.
+- A remote login.
+- A cloud AI model.
+- A live NASA API.
+- External fonts, images, or scripts that have not been bundled or cached.
+
+Do not build authentication, billing, live wearable integrations, simultaneous multi-device synchronization, or native mobile packaging for this prototype.
+
+Use one device containing fictional crew profiles. Keep components reusable for future platforms.
+
+3. OPERATING ENVIRONMENTS
+
+Support configurable profiles for:
+- Space station.
+- Spacecraft.
+- Lunar surface base.
+
+The profile must change meaningful operational information:
+- Habitat zones and equipment locations.
+- Available medical and environmental equipment.
+- Crew roles and training metadata.
+- Communication availability.
+- Configured communication delay.
+- Routine schedules.
+- Applicable procedure and measurement-guide variants.
+- Gravity context.
+
+Do not infer communication delay solely from the word “spacecraft.”
+Do not treat spacecraft as synonymous with Mars.
+Do not apply Earth positioning instructions unchanged to microgravity.
+Do not create unsupported lunar or microgravity medical procedures.
+
+Fully implement and demonstrate one fictional space-station profile.
+Provide spacecraft and lunar-base configurations that demonstrate equipment, location, schedule, and communication differences.
+
+Where a procedure is not supported for a selected environment, explicitly explain that limitation and provide the supported escalation route. Never silently substitute an unsuitable procedure.
+
+All sample inventories, layouts, and schedules must be labeled fictional.
+
+4. DESIGN AND EASE OF USE
+
+Design for a landscape tablet, with excellent laptop support and a usable narrow-screen layout.
+
+Use:
+- Large touch targets, approximately 48 CSS pixels or larger for primary controls.
+- Comfortable text sizes and clear spacing.
+- High contrast and visible keyboard focus.
+- Text labels alongside icons.
+- Status labels alongside colors.
+- Plain language appropriate for non-doctors.
+- Short instructions, one main action per emergency step.
+- Progressive disclosure for explanations and scientific detail.
+- Consistent patient identity and mission context.
+
+Avoid:
+- Tiny controls.
+- Dense medical dashboards.
+- Long forms before urgent help.
+- Decorative animations during emergency tasks.
+- Unexplained abbreviations.
+- Fake precision or arbitrary health scores.
+- “Healthy” labels based solely on missing or limited data.
+
+Use operational statuses such as:
+- Not assessed.
+- Check-in due.
+- Observation recorded.
+- Active incident.
+- Data unavailable.
+- Reading needs confirmation.
+
+Visual style:
+Professional, calm, and suitable for a space-health application.
+Use a restrained space-inspired palette, clear cards, and a simple habitat schematic.
+Do not imitate a cluttered spacecraft cockpit.
+Do not use NASA branding in a way that implies endorsement.
+
+Keep a persistent Emergency control accessible throughout the app.
+Emergency entry must not require completing a form or selecting every patient detail first.
+
+Include an unobtrusive but persistent “Simulation / Research prototype” indicator.
+
+5. INFORMATION ARCHITECTURE
+
+Implement eight main areas. Related functions may use tabs or drawers to prevent navigation clutter.
+
+A. CREW DASHBOARD
+
+Include:
+- Three fictional crew profiles.
+- Current patient/helper context.
+- Latest confirmed observations and timestamps.
+- Small measurement trends when sufficient data exists.
+- Upcoming reminders.
+- Active incident resume control.
+- “Assess myself.”
+- “Help a crewmate.”
+- “Emergency.”
+- A concise habitat-status preview.
+- Visible offline/online and data-readiness status.
+
+Show when a reading is old, missing, simulated, or user-reported.
+Do not interpret every deviation from baseline as dangerous.
+Do not display an overall medical fitness score.
+
+B. GUIDED ASSESSMENT
+
+Support two modes:
+- Self-assessment.
+- Assessing a crewmate.
+
+Record:
+- Patient.
+- Observer/helper.
+- Symptoms in the user's own words.
+- Symptom onset.
+- Location.
+- Recent activity.
+- Relevant contextual observations.
+- Available measurements.
+
+Distinguish:
+- Patient-reported symptoms.
+- Helper-observed signs.
+- Device measurements.
+- AI-suggested information awaiting confirmation.
+
+Offer:
+- Structured symptom buttons.
+- Free-text notes.
+- Manual fields.
+- Optional AI extraction.
+
+Allow “Not sure,” “Unable to assess,” and “Not available.”
+Never replace uncertainty with a normal value.
+
+Selecting acute chest pain must expose the urgent pathway immediately.
+Do not require vital signs before entering emergency assistance.
+
+C. MEASUREMENT GUIDES
+
+Create two complete interface workflows:
+- Blood-pressure measurement.
+- Pulse-oximeter measurement.
+
+Each guide contains:
+- Why the measurement matters.
+- Required equipment.
+- Device and environment applicability.
+- Illustrations or simple diagrams.
+- Preparation and positioning instructions where supported.
+- Measurement entry with units.
+- Reading-quality questions.
+- Timestamp and operator identity.
+- An explanation of limitations.
+- The supported next action.
+
+Blood pressure records systolic and diastolic values separately in mmHg.
+Pulse-oximeter readings record SpO₂ in percent and pulse in beats per minute if available.
+
+Do not imply that an ordinary tablet camera provides validated blood pressure or oxygen readings.
+
+Do not ask users to delay urgent care to complete routine measurement preparation.
+Do not dismiss serious symptoms because a device reading appears normal.
+
+Include “Equipment unavailable” and “Unable to obtain a reading.”
+Validate data types and units. Any technical plausibility checks must be distinguished from clinical interpretation.
+
+Use source-backed draft content, with review status visible in the evidence drawer.
+If a device-specific or mission-specific instruction is unavailable, explicitly identify the gap.
+
+D. ASSESSMENT REVIEW
+
+Show:
+- Confirmed observations.
+- Missing or uncertain information.
+- Descriptive trends.
+- Relevant source-linked explanations.
+- Next steps from the configured scenario logic.
+- Follow-up task creation.
+- Handoff preparation.
+
+Do not invent diagnoses, personalized risk percentages, or clinical thresholds.
+
+E. EMERGENCY ASSISTANT
+
+Implement a deterministic chest-pain demonstration with:
+- Immediate onboard-help and medical-contact prompts.
+- Responsiveness and normal-breathing observations.
+- Appropriate escalation when the patient becomes unresponsive or breathing changes.
+- A persistent “Condition changed” control.
+- Equipment availability and location.
+- One instruction per screen.
+- Action acknowledgement.
+- Event timestamps and elapsed time.
+- Persistent incident state.
+- Clear missing-information handling.
+
+Implement explicit states and transitions, not an AI-generated conversation controlling the emergency.
+
+Use generic, source-backed initial first-aid concepts and clearly marked simulation content. Do not fabricate NASA-approved protocols.
+
+For resuscitation escalation, direct the user to the applicable trained crew protocol and available device prompts. Do not invent microgravity CPR techniques, medication doses, invasive procedures, or unsupported treatment instructions.
+
+Treatment-specific content without an appropriate source and review must remain explicitly unavailable rather than being generated by AI.
+
+Each procedure step should include:
+- Step ID.
+- Trigger or precondition.
+- Exact instruction.
+- Expected observation or completion.
+- Equipment requirements.
+- Applicability.
+- Supported alternatives.
+- Next states.
+- Source references.
+- Review status and version.
+
+Allow these responses where relevant:
+- Completed.
+- Equipment unavailable.
+- Unable to assess.
+- Not sure.
+- Condition changed.
+
+Do not permit skipping a safety-critical step as though it were completed.
+Record corrections without silently deleting prior events.
+
+CREW COORDINATION
+- Identify available helpers and training metadata.
+- Assign tasks within the scripted, reviewed scenario.
+- Identify patient-facing and equipment/communication tasks.
+- Record who completed each task.
+- Preserve a single-helper path where supported.
+- Allow another helper to take over.
+- Show completed actions, current step, and unresolved observations.
+
+This is a shared-device workflow. Do not add multi-device networking.
+
+F. HABITAT MAP AND “WHAT CHANGED?” TIMELINE
+
+Create a simple schematic with three zones for the main demo:
+- Exercise area.
+- Living/sleep area.
+- Medical/work area.
+
+Show:
+- Last-reported crew locations and their timestamps.
+- Symptoms associated with locations and times.
+- Available environmental readings.
+- Sensor identity, units, timestamps, and data quality.
+- Missing or stale readings.
+- Possible overlaps in observations.
+
+Location is manually reported or simulated. Do not imply real-time tracking.
+
+The timeline lets users inspect:
+- Earlier observations.
+- Recent changes.
+- Current incident context.
+
+Keep routine time-series trends separate from emergency severity.
+
+Implement one scripted shared-environment scenario:
+- An earlier fictional symptom report in a zone.
+- A simulated environmental reading change.
+- A later patient incident with overlapping location/time.
+- An inspectable notice that the observations overlap.
+
+Language should say:
+“Possible shared environmental concern.”
+“Observations overlap in time and location.”
+“Cause undetermined.”
+
+Never say:
+“The cabin caused this medical event.”
+“CO₂ poisoning confirmed.”
+“Radiation sickness detected.”
+unless supported by an actual validated diagnostic process, which this prototype does not implement.
+
+Each connection must reveal the evidence behind it.
+Missing data must reduce certainty, not create reassurance.
+
+Any demo sensor thresholds must be explicitly labeled simulation triggers, not operational safety limits.
+
+The app must not control ventilation, oxygen, pressure, shielding, or other life-support hardware.
+
+G. INCIDENT AND HANDOFF
+
+Generate a structured report containing:
+- Patient and helpers.
+- Mission and location.
+- Symptom onset.
+- Reported symptoms.
+- Observed signs.
+- Measurements, units, timestamps, and quality.
+- Completed actions and their operators.
+- Patient-condition changes.
+- Relevant habitat observations.
+- Missing information.
+- Unresolved questions.
+- Sources and procedure version.
+
+Provide:
+- Editable summary.
+- Copy as text.
+- Downloadable structured export.
+- Template-based generation that works offline.
+- Optional AI wording assistance.
+
+Retain the underlying structured record.
+AI must not add an unrecorded action, measurement, diagnosis, or assertion.
+
+Communication states must be honest:
+- Draft.
+- Prepared for handoff.
+- Exported.
+- Queued, only if an actual queue exists.
+
+Never display “Sent to mission control” without an implemented and confirmed transmission.
+For the prototype, export is sufficient.
+
+H. ROUTINES, MISSION SETTINGS, AND EVIDENCE
+
+Use clear tabs for:
+- Routine and reminders.
+- Mission configuration.
+- Equipment inventory.
+- Sources and research data.
+- Demo controls.
+
+Reminders:
+- Daily wellbeing check-in.
+- Scheduled measurement.
+- Exercise or routine tasks from the fictional mission schedule.
+- Follow-up tasks.
+- Due, completed, rescheduled, and overdue states.
+- Pause routine interruptions during an active emergency.
+- Evaluate overdue tasks when reopening the app.
+
+Do not promise notifications while the app is closed.
+Follow-up intervals must be configured, sourced, or explicitly fictional; do not invent clinical intervals.
+
+Wellbeing:
+- Sleep duration and quality.
+- Fatigue.
+- General mood/wellbeing.
+- Optional personal note.
+
+Keep private wellbeing notes out of the shared dashboard and handoff by default.
+The prototype uses fictional data and does not claim production-grade access control.
+
+Evidence:
+- Searchable source list.
+- Source-linked explanations.
+- Procedure version and review status.
+- Clear separation of NASA research information, general clinical references, device guidance, and team-created simulation content.
+
+6. SCIENCE AND CONTENT RULES
+
+Use this explanation structure:
+Why it matters → equipment → how to measure → check quality → interpretation limits → supported next action.
+
+Preserve these distinctions:
+- Hazard versus symptom.
+- Symptom versus diagnosis.
+- Measured versus reported.
+- Correlation versus cause.
+- Environmental measurement versus personal exposure.
+- Research data versus live patient data.
+- Demonstration threshold versus clinical threshold.
+
+Do not:
+- Estimate bone density from days in space.
+- Infer radiation dose from symptoms.
+- Infer immune function from temperature alone.
+- Invent medication dosing.
+- Claim medical validation or NASA endorsement.
+- Treat a simulated habitat association as clinical evidence.
+
+Mission context:
+- Communication delay varies by destination and circumstances.
+- A Mars day is approximately 24 hours and 39.5 minutes; this is not extra daylight.
+- Lunar surface gravity is approximately one-sixth of Earth's.
+- Microgravity procedures require appropriate supporting instructions.
+- Do not use the handwritten radiation range from our notes as an alarm threshold.
+
+Fine motor skills, vision, fluid shifts, nutrition, pharmaceuticals, laboratory analysis, and resource recycling are future research/content areas. Do not build additional diagnostic modules for them in this first release.
+
+7. SOURCE MATERIAL
+
+Use these as starting references. Attribute claims to the source that actually supports them.
+
+NASA hazards:
+https://www.nasa.gov/hrp/hazards/
+
+NASA risks:
+https://www.nasa.gov/hrp/risks/
+
+NASA ongoing research:
+https://www.nasa.gov/hrp/ongoing-hrp-research/
+
+Human Research Roadmap:
+https://humanresearchroadmap.nasa.gov/
+
+Medical conditions catalog:
+https://humanresearchroadmap.nasa.gov/Evidence/medicalConditions.aspx
+
+NASA Standard Measures:
+https://www.nasa.gov/humans-in-space/spaceflight-standard-measures-characterizing-how-humans-adapt-in-space/
+
+NASA medical decision-support research:
+https://www.nasa.gov/centers-and-facilities/ames/ames-science/ames-space-biosciences/a-clinical-decision-support-system-for-earth-independent-medical-operations/
+
+OSDR:
+https://science.nasa.gov/biological-physical/data/osdr/
+
+Environmental Data Application:
+https://visualization.osdr.nasa.gov/eda/
+
+OSD-575:
+https://osdr.nasa.gov/bio/repo/data/studies/OSD-575
+
+RadLab:
+https://visualization.osdr.nasa.gov/radlab/gui/overview/
+
+CSA radiation monitoring:
+https://www.asc-csa.gc.ca/eng/news/articles/2026/2026-02-26-monitoring-radiation-astronaut-health.asp
+
+CSA space-science context:
+https://www.asc-csa.gc.ca/eng/iss/science/why-do-we-conduct-science-experiments-in-space.asp
+
+General first-aid reference:
+https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines
+
+These references do not automatically constitute a mission-approved procedure set.
+Do not claim content has been reviewed by Omar or a clinician before that review actually occurs.
+
+8. NASA DATA INTEGRATION
+
+Prefer one small, genuine, attributed historical environmental dataset excerpt.
+
+Preserve:
+- Dataset or mission identifier.
+- Instrument and location where available.
+- Date range.
+- Units.
+- Source URL.
+- Retrieval date.
+- Relevant limitations.
+
+Bundle the selected excerpt locally so its visualization works offline.
+
+Keep historical NASA research data in a clearly labeled research/example view.
+Do not merge it into fictional patient records as though it occurred during the demo incident.
+
+OSD-575 can appear as a source-linked research example. Do not train a diagnostic model on its small cohort.
+
+If data retrieval is blocked:
+- Continue implementing the application.
+- Use explicitly labeled synthetic data for the scenario.
+- Report the missing real-data integration honestly.
+- Never fabricate a NASA dataset or attribution.
+
+9. AI FEATURES
+
+Implement AI as optional assistance.
+
+Priorities:
+1. Extract symptoms, onset, location, and activity from a note.
+2. Draft a handoff using confirmed structured data.
+3. Optionally summarize habitat/crew observations with explicit uncertainty.
+
+Requirements:
+- Server-side API keys only.
+- Validate AI output against a schema.
+- Show extracted values for confirmation.
+- Missing fields stay missing.
+- Preserve original notes.
+- No autonomous medical decisions.
+- No generated emergency instructions.
+- No invented measurements, events, sources, or diagnoses.
+- No dependence on AI to continue a workflow.
+
+If no key is configured or the request fails:
+- Manual entry remains available.
+- Template-based handoff generation works.
+- Explain the unavailable feature briefly.
+- Never pretend a scripted response came from a live AI model.
+
+Only send explicitly selected fictional/demo information to the AI endpoint.
+Private notes are excluded by default.
+
+10. OFFLINE BEHAVIOR AND PERSISTENCE
+
+Precache:
+- Application shell and navigation.
+- Fonts, icons, and illustrations.
+- Emergency procedure content.
+- Measurement guides.
+- Evidence summaries needed by the workflows.
+- Fictional mission profiles and demo fixtures.
+- Selected bundled research-data excerpt.
+
+External source pages may require internet. Their citations and locally authored summaries should remain visible offline.
+
+Use IndexedDB for:
+- Assessments.
+- Measurements.
+- Incidents.
+- Action logs.
+- Tasks.
+- Settings.
+- Confirmed notes.
+
+Persist important transitions as they occur.
+Restore the current incident and step after reload.
+Prevent duplicate logging from rapid repeated taps.
+Handle storage failures visibly.
+Provide export/backup and explicit demo reset confirmation.
+
+Show:
+- Online/offline.
+- Offline preparation status based on actual cache readiness.
+- Unsaved changes or persistence errors.
+- Source-data timestamps.
+
+Do not force application updates or reloads during an active incident.
+Cache updates must not silently replace the procedure version used by an ongoing incident.
+
+A closed application cannot provide a live timer or guaranteed background reminder. On reopening, calculate elapsed time from stored timestamps.
+
+11. DATA MODEL
+
+Use shared TypeScript types for at least:
+- CrewMember.
+- MissionProfile.
+- HabitatZone.
+- EquipmentItem.
+- Observation.
+- Measurement.
+- EnvironmentalReading.
+- Assessment.
+- Incident.
+- Procedure.
+- ProcedureStep.
+- ActionEvent.
+- Reminder.
+- SourceReference.
+
+Relevant records should carry:
+- Unique identifier.
+- Timestamp.
+- Patient/observer/operator identity where applicable.
+- Units where applicable.
+- Source or provenance.
+- Confirmation state.
+- Data-quality state.
+- Simulation versus research-data designation.
+
+Store timestamps consistently and display the configured mission time clearly.
+Avoid untracked changes to historical observations.
+
+12. BUILD ORDER
+
+Milestone 1 — Foundation
+- Functional navigation.
+- Shared types.
+- IndexedDB.
+- Fictional crew and mission profiles.
+- Tablet-friendly components.
+
+Milestone 2 — Complete emergency journey
+- Chest-pain scenario.
+- Condition-change handling.
+- Equipment-unavailable handling.
+- Incident log.
+- Template handoff.
+- Reload recovery.
+
+Milestone 3 — Offline verification
+- Service worker.
+- Cached content.
+- Offline readiness indicator.
+- Successful disconnected emergency walkthrough.
+
+Milestone 4 — Routine health
+- Self/crewmate assessment.
+- Measurement guides.
+- Review screen.
+- Reminders.
+
+Milestone 5 — Habitat connection
+- Three-zone map.
+- Timeline.
+- Scripted overlap scenario.
+- Inspectable evidence.
+- Mission configuration changes.
+
+Milestone 6 — AI, research example, and polish
+- Optional extraction and handoff assistance.
+- Attributed data example.
+- Accessibility and responsive review.
+- Final acceptance tests.
+
+Make the application usable at every milestone.
+Do not spend the first half of the build on landing pages or animations.
+
+13. ACCEPTANCE TESTS
+
+Implement meaningful tests for deterministic emergency transitions, record persistence, and data validation. Also run browser walkthroughs.
+
+Verify:
+- Self-assessment and crewmate assessment save under the correct patient.
+- Chest-pain assistance is accessible without completing a form.
+- Patient deterioration changes the pathway without losing prior events.
+- Missing equipment does not create an impossible instruction loop.
+- “Not sure” remains uncertainty.
+- Apparently normal measurements do not automatically clear serious symptoms.
+- A replacement helper can understand what has already happened.
+- Habitat associations show their evidence and never assert causation.
+- Mission changes update equipment and context correctly.
+- Offline emergency use works after preparation.
+- Reloading offline restores the active incident.
+- AI failure leaves all core workflows functional.
+- Handoff exports contain only recorded or confirmed facts.
+- Routine notifications do not interrupt active emergency steps.
+- Old or missing sensor readings are clearly labeled.
+- Reset requires confirmation and does not silently delete work.
+
+Test on the published HTTPS application as well as development preview.
+Check an actual laptop browser and a tablet-sized viewport.
+Report which real devices and browsers were actually tested.
+
+14. DELIVERY
+
+Deliver:
+- A functioning CrewCheck PWA.
+- All eight connected application areas.
+- One coherent end-to-end emergency/habitat demonstration.
+- Offline records and emergency content.
+- Editable source-linked content files.
+- Fictional demo fixtures.
+- Optional AI with graceful fallback.
+- A README explaining setup, offline preparation, architecture, and known limitations.
+- A short demonstration script.
+- A clear list of implemented features, tested behavior, and remaining gaps.
+
+Keep medical content in files that Omar can review without changing application logic.
+Keep UI components easy for Abdullah to refine.
+Keep storage, procedures, and offline services understandable for Jafar.
+
+Do not describe the prototype as clinically validated, flight-ready, or proven to save lives.
+
+The final experience should make a stressed user understand:
+WHO needs help,
+WHAT is known,
+WHAT is uncertain,
+WHAT the next supported action is,
+WHO is doing it,
+and WHETHER the habitat also needs investigation.
+
+Begin building now, following the milestones above.

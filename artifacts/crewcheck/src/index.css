@@ -1,0 +1,115 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --font-sans: var(--app-font-sans);
+  --font-mono: var(--app-font-mono);
+  --radius-md: 0.9rem;
+  --radius-lg: 1.2rem;
+  --radius-xl: 1.7rem;
+}
+
+:root {
+  color-scheme: light;
+  --background: 42 34% 95%;
+  --foreground: 208 29% 17%;
+  --border: 39 18% 82%;
+  --input: 39 18% 82%;
+  --card: 43 32% 98%;
+  --card-foreground: 208 29% 17%;
+  --primary: 198 46% 27%;
+  --primary-foreground: 45 40% 97%;
+  --secondary: 43 24% 89%;
+  --secondary-foreground: 208 29% 17%;
+  --muted: 40 22% 91%;
+  --muted-foreground: 208 12% 43%;
+  --accent: 16 61% 54%;
+  --accent-foreground: 42 34% 97%;
+  --destructive: 4 56% 43%;
+  --destructive-foreground: 0 0% 100%;
+  --ring: 198 46% 27%;
+  --app-font-sans: "Trebuchet MS", "Avenir Next", sans-serif;
+  --app-font-mono: "SFMono-Regular", Consolas, monospace;
+  --radius: 1rem;
+}
+
+.dark {
+  --background: 208 31% 12%;
+  --foreground: 42 28% 93%;
+  --border: 208 20% 28%;
+  --input: 208 20% 28%;
+  --card: 208 28% 16%;
+  --card-foreground: 42 28% 93%;
+  --primary: 185 37% 59%;
+  --primary-foreground: 208 31% 12%;
+  --secondary: 208 20% 23%;
+  --secondary-foreground: 42 28% 93%;
+  --muted: 208 20% 23%;
+  --muted-foreground: 200 12% 69%;
+  --accent: 16 61% 60%;
+  --accent-foreground: 208 31% 12%;
+  --destructive: 4 60% 55%;
+  --destructive-foreground: 0 0% 100%;
+  --ring: 185 37% 59%;
+}
+
+@layer base {
+  * { @apply border-border; }
+  html { background: hsl(var(--background)); }
+  body { @apply font-sans antialiased bg-background text-foreground; margin: 0; min-width: 320px; }
+  button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
+  button, a { touch-action: manipulation; }
+  :focus-visible { outline: 3px solid hsl(var(--accent)); outline-offset: 3px; }
+}
+
+:root { font-synthesis: none; text-rendering: optimizeLegibility; }
+#root { min-height: 100dvh; }
+.app-shell { min-height: 100dvh; background: radial-gradient(ellipse at 100% 0%, hsl(42 42% 90% / .72), transparent 42%), hsl(var(--background)); }
+.topbar { border-bottom: 1px solid hsl(var(--border)); background: hsl(var(--background) / .92); backdrop-filter: blur(12px); }
+.page-wrap { width: min(1160px, calc(100% - 40px)); margin-inline: auto; }
+.eyebrow { font: 700 11px/1.2 var(--app-font-mono); text-transform: uppercase; letter-spacing: .14em; color: hsl(var(--muted-foreground)); }
+.card { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 18px; box-shadow: 0 12px 32px hsl(208 28% 18% / .045); }
+.btn { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; border-radius: 12px; padding: 12px 18px; font-weight: 700; transition: transform .16s ease, opacity .16s ease; cursor: pointer; }
+.btn:hover { transform: translateY(-1px); }
+.btn-primary { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
+.btn-danger { background: hsl(var(--destructive)); color: white; }
+.btn-soft { background: hsl(var(--secondary)); color: hsl(var(--secondary-foreground)); }
+.field { width: 100%; min-height: 48px; border: 1px solid hsl(var(--border)); border-radius: 11px; background: hsl(var(--card)); padding: 11px 13px; color: hsl(var(--foreground)); }
+.nav-link { min-height: 44px; display: flex; align-items: center; gap: 9px; padding: 8px 12px; border-radius: 10px; font-weight: 650; color: hsl(var(--muted-foreground)); text-decoration: none; }
+.nav-link[aria-current="page"] { color: hsl(var(--primary)); background: hsl(var(--primary) / .09); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #3f806d; display: inline-block; }
+.status-dot.offline { background: #b66d42; }
+.crew-avatar { width: 46px; height: 46px; display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; border-radius: 15px; font-size: 13px; font-weight: 800; }
+.crew-avatar.coral { background: hsl(15 63% 87%); color: hsl(15 48% 32%); }
+.crew-avatar.blue { background: hsl(195 40% 85%); color: hsl(198 43% 28%); }
+.crew-avatar.gold { background: hsl(43 56% 83%); color: hsl(35 48% 30%); }
+.reveal { animation: appear .38s ease both; }
+@keyframes appear { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 900px) {
+  .page-wrap { width: min(100% - 28px, 600px); }
+  .nav-desktop { display: none !important; }
+  .mobile-nav { display: flex !important; }
+}
+@media (min-width: 768px) and (orientation: landscape) {
+  .page-wrap { width: min(1240px, calc(100% - 64px)); }
+}
