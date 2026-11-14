@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "bJRnLCWdS8yHbx2XcZKQe"
+uri = "file://.local/outputs/Pulse-Beyond---Judges-Presentation.pdf"
+type = "pdf"
+title = "Pulse Beyond — Judges Presentation.pdf"
