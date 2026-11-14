@@ -1,4 +1,4 @@
-const CACHE_NAME = "crewcheck-shell-v3-nasa-reference";
+const CACHE_NAME = "crewcheck-shell-v4-own-words";
 const APP_ROOT = new URL("./", self.registration.scope).href;
 const APP_INDEX = new URL("index.html", APP_ROOT).href;
 const APP_SHELL = [APP_ROOT, APP_INDEX, ...[

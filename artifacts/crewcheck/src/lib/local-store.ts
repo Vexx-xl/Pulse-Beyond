@@ -103,9 +103,11 @@ export async function readAll<T>(store: StoreName): Promise<T[]> {
 export async function writeRecord<T extends { id: string }>(store: StoreName, record: T): Promise<void> {
   const db = await openDb();
   return new Promise((resolve, reject) => {
-    const request = db.transaction(store, "readwrite").objectStore(store).put(record);
-    request.onsuccess = () => resolve();
-    request.onerror = () => reject(request.error || new Error("Could not save locally."));
+    const transaction = db.transaction(store, "readwrite");
+    transaction.objectStore(store).put(record);
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error || new Error("Could not save locally."));
+    transaction.onabort = () => reject(transaction.error || new Error("Local save was interrupted."));
   });
 }
 export async function clearDemoData(): Promise<void> {

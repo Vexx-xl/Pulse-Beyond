@@ -53,7 +53,7 @@ export function RecordsProvider({ children }: { children: ReactNode }) {
     catch (error) { setPersistence({ ready: false, error: error instanceof Error ? error.message : "Could not save incident." }); throw error; }
   };
   const saveAssessment = async (assessment: Assessment) => {
-    try { await writeRecord("assessments", assessment); setAssessments((items) => [assessment, ...items.filter((item) => item.id !== assessment.id)]); }
+    try { await writeRecord("assessments", assessment); setAssessments((items) => [assessment, ...items.filter((item) => item.id !== assessment.id)]); setPersistence({ ready: true, error: "" }); }
     catch (error) { setPersistence({ ready: false, error: error instanceof Error ? error.message : "Could not save observation." }); throw error; }
   };
   const saveMeasurement = async (measurement: Measurement) => {

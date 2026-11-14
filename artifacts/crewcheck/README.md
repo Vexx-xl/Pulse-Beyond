@@ -1,5 +1,26 @@
 # Pulse Beyond
 
+## Own-words crew reports
+
+Observe starts with **Tell me how you feel**, using typing or optional browser
+speech recognition. Voice never starts automatically: the user must acknowledge
+that their browser may send audio to its speech provider and then tap Start.
+Only recognized text is added to the editable report; the app stores no audio
+recording. Voice is English, device/browser-dependent and requires an online
+speech service in this version. Permission errors and unsupported browsers leave
+typing available.
+
+The app uses deterministic, plain reporting prompts, not an AI clinician.
+Keywords choose follow-up questions only, never urgency, a diagnosis, treatment,
+or safety clearance. Every report offers direct urgent-help and unsure paths.
+Emergency help never waits for saving a report.
+
+Drafts are backed up in the current tab's session storage, including across a
+reload or a visit to Emergency. Closing the tab or clearing browser data may
+remove the draft. Backup failures are shown explicitly. Confirm and save commits
+an IndexedDB report before clearing its draft. Saved own-words reports can be
+selected and exported from Handoff without starting an emergency incident.
+
 ## Optional NASA station reference
 
 Open **Habitat → Optional: NASA station exterior reference** for the ISS preview.

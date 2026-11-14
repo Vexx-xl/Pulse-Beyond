@@ -46,6 +46,7 @@ The prototype includes general emergency-help recording, crew observation/review
 - The users are not doctors. Use plain observations, not diagnoses or clinical interpretation.
 - The product name is Pulse Beyond. Use the user-supplied astronaut logo and its midnight navy, cream, gold and turquoise palette.
 - Keep tablet screens simple: essentials and one next action first; expose setup, research, history, and forms only when requested.
+- Crew members must be able to describe how they feel in their own words using both typing and optional voice. Guide reporting with plain follow-ups, not diagnoses. Voice needs explicit consent and an editable transcript; typing must remain available offline.
 - Emergency is general help for any urgent concern, not a chest-pain-only scenario. Do not require symptom classification, measurements, or completing a form before showing how to get onboard help.
 
 ## User preferences
