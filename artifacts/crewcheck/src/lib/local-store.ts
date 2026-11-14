@@ -118,3 +118,29 @@ export async function clearDemoData(): Promise<void> {
     request.onerror = () => reject(request.error || new Error("Could not reset local records."));
   })));
 }
+
+/** Add only missing demo IDs, atomically. Never clears or replaces existing data. */
+export async function addDemoRecords(data: {
+  incidents: Incident[]; assessments: Assessment[]; measurements: Measurement[];
+}): Promise<number> {
+  const db = await openDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(["incidents", "assessments", "measurements"], "readwrite");
+    let inserted = 0;
+    tx.oncomplete = () => resolve(inserted);
+    tx.onerror = () => reject(tx.error || new Error("Could not add demo records. No demo changes were committed."));
+    tx.onabort = () => reject(tx.error || new Error("Demo loading was interrupted. No demo changes were committed."));
+    for (const name of ["incidents", "assessments", "measurements"] as const) {
+      const store = tx.objectStore(name);
+      for (const record of data[name]) {
+        const request = store.get(record.id);
+        request.onsuccess = () => {
+          if (request.result === undefined) {
+            store.add(record);
+            inserted++;
+          }
+        };
+      }
+    }
+  });
+}

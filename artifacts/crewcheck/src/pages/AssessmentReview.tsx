@@ -5,7 +5,7 @@ import { useRecords } from "@/lib/records-context";
 
 export default function AssessmentReviewPage() {
   const { assessments, measurements } = useRecords();
-  const [selectedId, setSelectedId] = useState("");
+  const [selectedId, setSelectedId] = useState(() => new URLSearchParams(window.location.search).get("observation") || "");
   const selected = useMemo(() => assessments.find((item) => item.id === selectedId) || assessments[0], [assessments, selectedId]);
   const relatedMeasurements = measurements.filter((item) => selected && item.personName === selected.person);
   const entered = selected ? Object.entries(selected.observations).filter(([, value]) => value.trim()) : [];

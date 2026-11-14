@@ -12,6 +12,7 @@ import Assessment from '@/pages/Assessment';
 import Measurements from '@/pages/Measurements';
 import Mission from '@/pages/Mission';
 import AssessmentReview from '@/pages/AssessmentReview';
+import Demo from '@/pages/Demo';
 import AppShell from '@/components/AppShell';
 import { RecordsProvider } from '@/lib/records-context';
 import {
@@ -34,6 +35,7 @@ function Router() {
             <Route path="/handoff" component={Handoff} />
             <Route path="/assessment" component={Assessment} />
             <Route path="/review" component={AssessmentReview} />
+            <Route path="/demo" component={Demo} />
             <Route path="/measurements" component={Measurements} />
             <Route path="/mission" component={Mission} />
             <Route component={NotFound} />

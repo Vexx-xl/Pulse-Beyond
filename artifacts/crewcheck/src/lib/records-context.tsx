@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { clearDemoData, readAll, writeRecord, type Assessment, type Incident, type Measurement, type MissionSettings, type Reminder, type WellbeingEntry } from "@/lib/local-store";
+import { addDemoRecords, clearDemoData, readAll, writeRecord, type Assessment, type Incident, type Measurement, type MissionSettings, type Reminder, type WellbeingEntry } from "@/lib/local-store";
+import { createDemoMaterial } from "@/lib/demo-material";
 
 type Persistence = { ready: boolean; error: string };
 type ContextValue = {
@@ -13,6 +14,7 @@ type ContextValue = {
   saveSettings: (settings: MissionSettings) => Promise<void>;
   saveWellbeing: (entry: WellbeingEntry) => Promise<void>;
   reset: () => Promise<void>;
+  loadDemoMaterial: () => Promise<number>;
 };
 const RecordsContext = createContext<ContextValue | null>(null);
 export function RecordsProvider({ children }: { children: ReactNode }) {
@@ -84,7 +86,24 @@ export function RecordsProvider({ children }: { children: ReactNode }) {
       throw error;
     }
   };
-  const value = useMemo(() => ({ incidents, assessments, measurements, reminders, settings, wellbeing, persistence, saveIncident, saveAssessment, saveMeasurement, saveReminder, saveSettings, saveWellbeing, reset }), [incidents, assessments, measurements, reminders, settings, wellbeing, persistence]);
+  const loadDemoMaterial = async () => {
+    const count = await addDemoRecords(createDemoMaterial());
+    let records: [Incident[], Assessment[], Measurement[]];
+    try {
+      records = await Promise.all([
+        readAll<Incident>("incidents"), readAll<Assessment>("assessments"), readAll<Measurement>("measurements"),
+      ]);
+    } catch {
+      throw new Error("Examples were saved, but their list could not refresh. Reload this page to read them.");
+    }
+    const [i, a, m] = records;
+    setIncidents(i.sort((x, y) => y.startedAt.localeCompare(x.startedAt)));
+    setAssessments(a.sort((x, y) => y.at.localeCompare(x.at)));
+    setMeasurements(m.sort((x, y) => y.at.localeCompare(x.at)));
+    setPersistence({ ready: true, error: "" });
+    return count;
+  };
+  const value = useMemo(() => ({ incidents, assessments, measurements, reminders, settings, wellbeing, persistence, saveIncident, saveAssessment, saveMeasurement, saveReminder, saveSettings, saveWellbeing, reset, loadDemoMaterial }), [incidents, assessments, measurements, reminders, settings, wellbeing, persistence]);
   return <RecordsContext.Provider value={value}>{children}</RecordsContext.Provider>;
 }
 export function useRecords() {

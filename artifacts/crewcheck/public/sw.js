@@ -1,4 +1,4 @@
-const CACHE_NAME = "crewcheck-shell-v5-voice-recovery";
+const CACHE_NAME = "crewcheck-shell-v6-demo-material";
 const APP_ROOT = new URL("./", self.registration.scope).href;
 const APP_INDEX = new URL("index.html", APP_ROOT).href;
 const APP_SHELL = [APP_ROOT, APP_INDEX, ...[

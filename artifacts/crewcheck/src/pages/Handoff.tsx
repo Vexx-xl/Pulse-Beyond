@@ -7,7 +7,7 @@ export default function HandoffPage() {
   const { incidents, assessments, measurements } = useRecords();
   const [selected, setSelected] = useState(() => {
     const observation = new URLSearchParams(window.location.search).get("observation");
-    return observation ? `observation:${observation}` : "";
+    return observation ? `observation:${observation}` : new URLSearchParams(window.location.search).get("incident") || "";
   });
   const [report, setReport] = useState("");
   const [copied, setCopied] = useState("");
